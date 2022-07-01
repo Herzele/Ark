@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"> -->
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+
+</head>
+
+
+<body>
+<link rel="stylesheet" type="text/css" href="interface.css" />
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<div class="header">
+  <span id="gameTitle">Ark</span>
+  <button type="button" id="btTestMode" onclick="activateTestMode()">TEST MODE</button>
+  <span id="dateJour"></span>
+</div>
+
+
+<div class="ressources">
+	  <div id="moneyDiv">Money : <span id="money"></span> + <span id="moneyPerSec"></span> / day</div> 
+	  <div id="reputationDiv">Reputation : <span id="reputation"></span> + <span id="reputPerSec"></span> / day</div>
+	  <div>--------</div>
+
+	  <div id="visitorsDiv">Visitors per day : <span id="visitorsPerSec"></span></div>
+
+</div>
+
+<div class="interface">
+
+	<div class="tab">
+	  <button class="tablinks" id="parcTab" onclick="openTab(event, 'Parc')">Parc</button>
+	  <button class="tablinks" id="animalsTab" onclick="openTab(event, 'Animals')">Animals</button>
+	  <button class="tablinks" id="marketTab" onclick="openTab(event, 'Market')">Market</button>
+	</div>
+
+	<div id="Parc" class="tabcontent">
+		<button id="createEnclosure">Buy Enclosure</button>
+	</div>
+
+	<div id="Animals" class="tabcontent">
+
+	</div>
+
+	<div id="Market" class="tabcontent">
+
+	</div>
+
+</div>
+
+
+
+<div class="logs">
+	<span id="logsDisplay"></span>
+</div>
+
+
+<div class="bottomBar">
+
+	<div><button type="button" class="btnSmall" id="btSave" onclick="saveGame()">SAVE</button></div>
+	<div><button type="button" class="btnSmall" id="btDelete" onclick="deleteSave()">Hard Reset</button></div>
+	<div><button type="button" class="btnSmall" id="btTest" onclick="">Test stuff</button></div>
+
+</div>
+
+
+<script type="text/javascript" src="enclosures.js"></script>
+<script type="text/javascript" src="animals.js"></script>
+<script type="text/javascript" src="main.js"></script>
+
+
+
+</body>
+</html>
+
+
+
+
