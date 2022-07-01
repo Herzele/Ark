@@ -148,15 +148,9 @@ function numberFormating(value, decimals){
 	return output;
 }
 
-function updateLogs(newLogString, whoSpeaks) {
+function updateLogs(newLogString) {
     log = "";
-    stringToPush = "";
-    if(whoSpeaks == "me"){
-          stringToPush = "<span class='meTalking'>" + newLogString + "</span><br>";
-        } else {
-          stringToPush = "<span class='otherTalking'>" + newLogString + "</span><br>";  
-        }
-    v.logsList.push(stringToPush);
+    v.logsList.push(newLogString + '<br>');
     for (let i = v.logsList.length - 1; i >= 0; i--) {
         log += v.logsList[i];
     }
