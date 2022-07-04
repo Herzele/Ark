@@ -15,14 +15,27 @@ class Animals{
 }
 
 function generateMarketList(){
-	for(i = 0; i < 4; i++){
+	for(i = 0; i < v.maxMarketCapacity; i++){
 		let randomElement = Math.floor(Math.random() * animalList.length);
 		marketList.push(animalList[randomElement]);
 	}
 	for(i = 0; i < marketList.length; i++){
-		updateLogs(marketList[i].aniName);
-	}
+		let marketDiv = document.createElement("div");
+		marketDiv.classList.add('marketCssDiv');
 
+		let marketSpan = document.createElement	("span");
+		marketSpan.textContent = marketList[i].aniName;
+		marketDiv.appendChild(marketSpan);
+
+		let buyAniBt = document.createElement("button");
+		buyAniBt.classList.add('buyAniBt');
+		buyAniBt.textContent = "Buy";
+
+		marketDiv.appendChild(buyAniBt);
+
+    	let node = document.getElementById("Market");
+    	node.appendChild(marketDiv);
+	}
 };
 
 

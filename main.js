@@ -15,6 +15,8 @@ var v = {
 
   parcMaxCapacity: 20,
 
+  maxMarketCapacity: 4,
+
   entryPrice: 1,
 
   firstGame : true,
