@@ -200,47 +200,41 @@
   margin-left: 28px;
 }
 
-/* -------------------- UPGRADES -------------------- */
-.tabContainer{
+/* -------------------- Enclosures -------------------- */
+.enclosureDivClass{
   display: flex;
-  flex-direction: row;
-  width: 100%;
+  flex-wrap: wrap;
 }
 
-.upgContainer{
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  gap: 3px;
-  width: 20%;
+.enclosureSmall {
+  height: 20%;
+  width: 32%;
+  margin-left: 1%;
+  margin-bottom: 1%;
+  position: relative;
+  bottom: 1%;
+  border: 1px solid black;
 }
 
-.middleCol{
-  width: 70%;
+.enclosureMedium {
+  height: 20%;
+  width: 48.5%;
+  margin-left: 1%;
+  margin-bottom: 1%;
+  position: relative;
+  bottom: 1%;
+  border: 1px solid black;
 }
 
-.rightCol{
-  flex-direction: row-reverse;
-  width: 10%;
+.enclosureLarge {
+  height: 20%;
+  width: 98%;
+  margin-left: 1%;
+  margin-bottom: 1%;
+  position: relative;
+  bottom: 1%;
+  border: 1px solid black;
 }
-
-.upgButton{
-  width: 100%;
-}
-
-#hideUpgS1 {
-  float: right;
-}
-
-#hideUpgS2 {
-  float: right;
-}
-
-#hideUpgS3 {
-  float: right;
-}
-
-
 
 
 /* -------------------- TABS -------------------- */

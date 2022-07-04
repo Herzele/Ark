@@ -2,22 +2,44 @@
 class Enclosure{
 	constructor (params){
 
+	this.encId = params.encId;
 	this.encSize = params.encSize;
-	this.encAnimal = params.encAnimal;
-	
+	this.encAnimal = params.encAnimal;	
 
+	if(this.encSize == 'small'){
+		this.encCssClass = 'enclosureSmall';
+	} else if(this.encSize =='medium'){
+		this.encCssClass = 'enclosureMedium';
+	} else {
+		this.encCssClass = 'enclosureLarge';
+	};
 
 	enclosureList.push(this);
+
+	let encDiv = document.createElement("span");
+	encDiv.classList.add(this.encCssClass);
+	encDiv.textContent = 'ICI';
+
+    let node = document.getElementById("enclosureDiv");
+    node.appendChild(encDiv);
+
+	updateLogs(enclosureList.length);
 
 	}
 }
 
-function createEnclosure(size, animal){
-	this.size = size;
-	this.animal = animal;
+function createEnclosure(size){
+	let enclosureId = enclosureList.length + 1;
 
-	enclosureList.push(this);
-	updateLogs('lol');
+	const newEnc = new Enclosure({
+	encId: enclosureId,
+	encSize: size});
+};
+
+
+function displayEnclosure(size){
+	
+
 };
 
 var loadedList = [];

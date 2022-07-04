@@ -61,6 +61,8 @@ function initialize() {
     document.getElementById("money").innerHTML = v.money;
     document.getElementById("reputation").innerHTML = v.reputation;
 
+    generateMarketList();
+
 
 }
 
