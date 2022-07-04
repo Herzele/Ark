@@ -44,7 +44,17 @@
 	</div>
 
 	<div id="Parc" class="tabcontent">
-		<button id="createEnclosure" onclick="createEnclosure('medium')">Buy Enclosure</button>
+		<div id="createEncDiv">
+			<button id="createEnclosure" onclick="createEnclosure('medium')">Buy Enclosure</button>
+			<span>
+				<select id = "encSizeSelector">  
+				  <option value="small"> Small </option>  
+				  <option value="medium"> Medium </option>  
+				  <option value="large"> Large </option>  
+				</select>
+			</span>
+		</div>
+
 		<div id="enclosureDiv" class="enclosureDivClass">
 			<span id="encTest" class="enclosureSmall">ICI</span>
 			<span id="encTest" class="enclosureSmall">ICI</span>

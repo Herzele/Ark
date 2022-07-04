@@ -3,8 +3,10 @@ class Enclosure{
 	constructor (params){
 
 	this.encId = params.encId;
-	this.encSize = params.encSize;
 	this.encAnimal = params.encAnimal;	
+
+	var encSizeSelec = document.getElementById('encSizeSelector');
+	this.encSize = encSizeSelec.value;
 
 	if(this.encSize == 'small'){
 		this.encCssClass = 'enclosureSmall';
