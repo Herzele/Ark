@@ -113,38 +113,38 @@ const fox = new Animals({
 	aniSize: "Small",
 	aniAttract: 3});
 
-// const sheep = new Animals({
-// 	aniName: "Sheep",
-// 	aniFood: "Herbivora",
-// 	aniSize: "Medium",
-// 	aniAttract: 1});
+const sheep = new Animals({
+	aniName: "Sheep",
+	aniFood: "Herbivora",
+	aniSize: "Medium",
+	aniAttract: 1});
 
-// const horse = new Animals({
-// 	aniName: "Horse",
-// 	aniFood: "Herbivora",
-// 	aniSize: "Medium",
-// 	aniAttract: 1});
+const horse = new Animals({
+	aniName: "Horse",
+	aniFood: "Herbivora",
+	aniSize: "Medium",
+	aniAttract: 1});
 
-// const deer = new Animals({
-// 	aniName: "Deer",
-// 	aniFood: "Herbivora",
-// 	aniSize: "Medium",
-// 	aniAttract: 2});
+const deer = new Animals({
+	aniName: "Deer",
+	aniFood: "Herbivora",
+	aniSize: "Medium",
+	aniAttract: 2});
 
-// const wolf = new Animals({
-// 	aniName: "Wolf",
-// 	aniFood: "Carnivora",
-// 	aniSize: "Medium",
-// 	aniAttract: 4});
+const wolf = new Animals({
+	aniName: "Wolf",
+	aniFood: "Carnivora",
+	aniSize: "Medium",
+	aniAttract: 4});
 
-// const cow = new Animals({
-// 	aniName: "Cow",
-// 	aniFood: "Herbivora",
-// 	aniSize: "Medium",
-// 	aniAttract: 1});
+const cow = new Animals({
+	aniName: "Cow",
+	aniFood: "Herbivora",
+	aniSize: "Medium",
+	aniAttract: 1});
 
-// const blackBear = new Animals({
-// 	aniName: "Black bear",
-// 	aniFood: "Carnivora",
-// 	aniSize: "Medium",
-// 	aniAttract: 6});
+const blackBear = new Animals({
+	aniName: "Black bear",
+	aniFood: "Carnivora",
+	aniSize: "Medium",
+	aniAttract: 6});
