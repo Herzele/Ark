@@ -15,7 +15,9 @@ var v = {
 
   parcMaxCapacity: 20,
 
-  maxMarketCapacity: 4,
+  marketMaxCapacity: 4,
+  marketCurrentCount: 0,
+
 
   entryPrice: 1,
 
@@ -213,6 +215,8 @@ window.setInterval(function timeDay() {
     calcMoney();
     calcReput();
     calcVisitors();
+
+
 
 
 }, 1000);
