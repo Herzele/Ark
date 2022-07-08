@@ -15,7 +15,6 @@ class Animals{
 
 	getInstance(){
 		let baseIdentifier = availableList.length;
-		updateLogs(baseIdentifier);
 		return baseIdentifier = new Animals({
 			aniName: "Fox",
 			aniFood: "Carnivora",
@@ -81,8 +80,6 @@ function moveAnimal(id, newPlace){
 		if(availableList[i].aniId === id){
 			let divToRemove = document.getElementById("Div" + availableList[i].aniId);
 
-			updateLogs("We are in the loop");
-			
 			divToRemove.remove();
 
 			let newDiv = document.createElement("div");
