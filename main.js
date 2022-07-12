@@ -216,7 +216,7 @@ window.setInterval(function timeDay() {
     calcReput();
     calcVisitors();
 
-
+    generateMarketList();
 
 
 }, 1000);

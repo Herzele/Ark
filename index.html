@@ -45,12 +45,12 @@
 
 	<div id="Parc" class="tabcontent">
 		<div id="createEncDiv">
-			<button id="createEnclosure" onclick="createEnclosure('medium')">Buy Enclosure</button>
+			<button id="createEnclosure" onclick="createEnclosure()">Buy Enclosure</button>
 			<span>
 				<select id = "encSizeSelector">  
-				  <option value="small"> Small </option>  
-				  <option value="medium"> Medium </option>  
-				  <option value="large"> Large </option>  
+				  <option value="Small"> Small </option>  
+				  <option value="Medium"> Medium </option>  
+				  <option value="Large"> Large </option>  
 				</select>
 			</span>
 		</div>
@@ -61,7 +61,7 @@
 	</div>
 
 	<div id="Animals" class="tabcontent">
-
+		<div id="holdingPen">Holding Pen</div>
 	</div>
 
 	<div id="Market" class="tabcontent">
@@ -83,7 +83,7 @@
 
 	<div><button type="button" class="btnSmall" id="btSave" onclick="saveGame()">SAVE</button></div>
 	<div><button type="button" class="btnSmall" id="btDelete" onclick="deleteSave()">Hard Reset</button></div>
-	<div><button type="button" class="btnSmall" id="btTest" onclick="">Test stuff</button></div>
+	<div><button type="button" class="btnSmall" id="btTest" onclick="repopulateDropdownList()">Test stuff</button></div>
 
 </div>
 

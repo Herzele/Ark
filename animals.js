@@ -16,10 +16,10 @@ class Animals{
 	getInstance(){
 		let baseIdentifier = availableList.length;
 		return baseIdentifier = new Animals({
-			aniName: "Fox",
-			aniFood: "Carnivora",
-			aniSize: "Small",
-			aniAttract: 3});
+			aniName: this.aniName,
+			aniFood: this.aniFood,
+			aniSize: this.aniSize,
+			aniAttract: this.aniAttract});
 		}
 }
 
@@ -38,69 +38,88 @@ function generateMarketList(){
 		for(i = 0; i < aniToAdd; i++){
 
 			let randomElement = Math.floor(Math.random() * baseAnimalList.length); 					// Select a random number in the base animal list
+			let currentAnimal = baseAnimalList[randomElement].getInstance();						// Initialise the random animal
+			availableList.push(currentAnimal);														// Add the animal to the list of available animal
 
-			availableList.push(baseAnimalList[randomElement].getInstance());						// Add the animal to the list of available animal
+			currentAnimal.aniId = availableList.length;												// Initialise the Id
+			currentAnimal.aniPlace = 'Market';														// Change the place to market
 
-			availableList[availableList.length - 1].aniId = availableList.length;					// Initialise the Id
-			availableList[availableList.length - 1].aniPlace = 'Market';							// Change the place to market
+			v.marketCurrentCount = v.marketCurrentCount + 1;										// Add 1 to the number of animals in the market
 
 			// Create the required Div in the market screen
-			v.marketCurrentCount = v.marketCurrentCount + 1;										// Add 1 to the number of animals in the market
+
 			let marketDiv = document.createElement("div");
-			marketDiv.id = "Div" + availableList[availableList.length - 1].aniId;								
-			marketDiv.classList.add('marketCssDiv');
+			marketDiv.id = "Div" + currentAnimal.aniId;								
+			marketDiv.classList.add('marketDivCss');
 
 			let marketSpan = document.createElement	("span");
-			marketSpan.textContent = availableList[i].aniName;
+			let str = currentAnimal.aniName + '<br>' + 'Size : ' + currentAnimal.aniSize +
+				'<br>Attractivity : ' + currentAnimal.aniAttract;
+
+			marketSpan.insertAdjacentHTML( 'beforeend', str );
+
+			// marketSpan.classList.add('aniNameCss');
 			marketDiv.appendChild(marketSpan);		
 
-			let currentAniId = availableList[i].aniId;
 			let btBuyAni = document.createElement("button");
-			btBuyAni.id = "Bt" + currentAniId;
+			btBuyAni.id = "Bt" + currentAnimal.aniId;
 			btBuyAni.classList.add('btBuyAni');
 			btBuyAni.textContent = "Buy";
-			// btBuyAni.onclick = function() { moveAnimal(currentAniId, 'Animals'); };
-			btBuyAni.addEventListener("click", function () {moveAnimal(currentAniId, 'Animals');});	
+			btBuyAni.addEventListener("click", function () {moveAnimal(currentAnimal.aniId, 'holdingPen');});	
 
 			marketDiv.appendChild(btBuyAni);
 
 	    	let node = document.getElementById("Market");
 	    	node.appendChild(marketDiv);
 
-
 		} 
 	}
 };
 
 
-function moveAnimal(id, newPlace){
+function moveAnimal(id, newPlace, newPlaceId){
 
 	for(i = 0; i < availableList.length; i++){
+		if(availableList[i].aniId == id){
+			let currentAnimal = availableList[i];
 
-		if(availableList[i].aniId === id){
-			let divToRemove = document.getElementById("Div" + availableList[i].aniId);
+			currentAnimal.aniPlace = newPlace;
 
-			divToRemove.remove();
+			if(newPlace == 'holdingPen'){
+				holdingPenList.push(currentAnimal);
+				let divToRemove = document.getElementById("Div" + currentAnimal.aniId);
+				divToRemove.remove();
+			} else if(newPlace == 'enclosure'){
+				newPlace = newPlace + newPlaceId;
+				updateLogs('current place : '+ newPlace);
+			}
+
 
 			let newDiv = document.createElement("div");
-			newDiv.id = availableList[i].aniId;						
-			newDiv.classList.add('marketCssDiv');								
+			newDiv.id = currentAnimal.aniId;						
+			newDiv.classList.add('marketDivCss');								
 
 			let newSpan = document.createElement("span");
-			newSpan.textContent = availableList[i].aniName;
+			let str = currentAnimal.aniName + '<br>' + 'Size : ' + currentAnimal.aniSize +
+				'<br>Attractivity : ' + currentAnimal.aniAttract;
+			newSpan.insertAdjacentHTML( 'beforeend', str );
+
 			newDiv.appendChild(newSpan);
 
 			let node = document.getElementById(newPlace);
 			node.appendChild(newDiv);
 		} 
-	}	
-	updateLogs("---+---");
+	}
+	repopulateDropdownList();	
 };
+
+
 
 
 var loadedList = [];
 var baseAnimalList = [];	// List of all animals from the initial pool, 1 animal of each type only
 var availableList = [];		// List of all animals bought or buyable. Used mainly to attribute unique ID
+var holdingPenList = [];	// List of all animals currently in the holding pen
 
 
 
