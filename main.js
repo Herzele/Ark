@@ -60,12 +60,12 @@ function initialize() {
 		currentDay.setDate(currentDay.getDate() + v.daysElapsed);
 	}
 
-
     //Initialise l'affichage des valeurs
     document.getElementById("money").innerHTML = v.money;
     document.getElementById("reputation").innerHTML = v.reputation;
 
     generateMarketList();
+    initializeEnc();
 
 
 }
@@ -181,15 +181,21 @@ function addDay() {
 
 function saveGame() {
 	localStorage.setItem("save",JSON.stringify(v));
+    localStorage.setItem("saveAniList", JSON.stringify(availableList));
+    localStorage.setItem("saveEncList", JSON.stringify(enclosureList));
 }
 
 
 function loadGame(){
 	v = JSON.parse(localStorage.getItem("save"));
+    availableList = JSON.parse(localStorage.getItem("saveAniList"));
+    loadedEncList = JSON.parse(localStorage.getItem("saveEncList"));
 }
 
 function deleteSave(){
 	localStorage.removeItem("save");
+    localStorage.removeItem("saveAniList");
+    localStorage.removeItem("saveEncList");
     location.reload();
 }
 
@@ -217,6 +223,7 @@ window.setInterval(function timeDay() {
     calcVisitors();
 
     generateMarketList();
+
 
 
 }, 1000);

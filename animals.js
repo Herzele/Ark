@@ -87,16 +87,17 @@ function moveAnimal(id, newPlace, newPlaceId){
 
 			if(newPlace == 'holdingPen'){
 				holdingPenList.push(currentAnimal);
-				let divToRemove = document.getElementById("Div" + currentAnimal.aniId);
-				divToRemove.remove();
+
 			} else if(newPlace == 'enclosure'){
 				newPlace = newPlace + newPlaceId;
-				updateLogs('current place : '+ newPlace);
 			}
+
+			let divToRemove = document.getElementById("Div" + currentAnimal.aniId);
+			divToRemove.remove();
 
 
 			let newDiv = document.createElement("div");
-			newDiv.id = currentAnimal.aniId;						
+			newDiv.id = "Div" + currentAnimal.aniId;						
 			newDiv.classList.add('marketDivCss');								
 
 			let newSpan = document.createElement("span");
@@ -116,7 +117,7 @@ function moveAnimal(id, newPlace, newPlaceId){
 
 
 
-var loadedList = [];
+var loadedAniList = [];
 var baseAnimalList = [];	// List of all animals from the initial pool, 1 animal of each type only
 var availableList = [];		// List of all animals bought or buyable. Used mainly to attribute unique ID
 var holdingPenList = [];	// List of all animals currently in the holding pen

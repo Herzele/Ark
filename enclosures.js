@@ -2,11 +2,9 @@
 class Enclosure{
 	constructor (params){
 
-	this.encId = enclosureList.length;
+	this.encId = params.encId;
 	this.encAnimal = "none";	
-
-	var encSizeSelec = document.getElementById('encSizeSelector');
-	this.encSize = encSizeSelec.value;
+	this.encSize = params.encSize;
 
 	let encTxt = "";
 	if(this.encSize == 'Small'){
@@ -52,13 +50,17 @@ class Enclosure{
 
 	this.encDiv.appendChild(this.btAdd);
  
-
-    let node = document.getElementById("enclosureDiv");
+	let node = document.getElementById("enclosureDiv");
     node.appendChild(this.encDiv);
 
-    enclosureList.push(this);
+    // enclosureList.push(this);
 
 	}
+
+	appendEncDiv(){
+		let node = document.getElementById("enclosureDiv");
+    	node.appendChild(this.encDiv);
+	};
 }
 
 function getSelectedValue(ddId){
@@ -92,19 +94,27 @@ function createEnclosure(){
 	let select = document.getElementById("encSizeSelector");
 	let enclosureSize = select.options[select.selectedIndex].value;
 
-	const newEnc = new Enclosure({
+	let id = enclosureList.length;
+
+	enclosureList[id] = new Enclosure({
 	encId: enclosureId,
 	encSize: enclosureSize});
 };
 
 
-function addAnimal(){
+function initializeEnc() {
+	for(i = 0; i < loadedEncList.length; i++){
+		enclosureList[enclosureList.length] = new Enclosure({
+		encId: loadedEncList[i].encId,
+		encSize: loadedEncList[i].encSize});
+	}
+};
 
+function constructator(id, size){
+	enclosureList[enclosureList.length] = new Enclosure({
+	encId: id,
+	encSize: size});
 }
 
-
-
-var loadedList = [];
 var enclosureList = [];
-
-
+var loadedEncList = [];
