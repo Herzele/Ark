@@ -6,7 +6,10 @@ class Animals{
 	this.aniFood = params.aniFood;
 	this.aniSize = params.aniSize;
 	this.aniAttract = params.aniAttract;
-	this.aniPlace = 'none';
+	this.aniCost = this.aniAttract * 1000;
+	this.aniPlace = params.aniPlace;
+	this.aniPlaceId = params.aniPlaceId;
+	this.aniEncId = params.aniEncId;
 	this.aniId = params.aniId;
 
 	baseAnimalList.push(this);
@@ -19,13 +22,83 @@ class Animals{
 			aniName: this.aniName,
 			aniFood: this.aniFood,
 			aniSize: this.aniSize,
-			aniAttract: this.aniAttract});
+			aniAttract: this.aniAttract,
+			aniEncId: this.aniEncId});
+	}
+
+	buyAnimal(){
+		if(v.money >= this.aniCost){
+			holdingPenList.push(this);
+			v.money = v.money - this.aniCost;
+			this.moveAnimal('holdingPen');
+		} else {
+			updateLogs("Not enough money");
 		}
+	}
+
+	moveAnimal(newPlace, newPlaceId, noRem){
+
+		this.aniPlace = newPlace;
+
+		if(newPlaceId != undefined){
+			newPlace = newPlace + newPlaceId;
+			this.aniPlaceId = newPlaceId;	
+		}
+
+		let costTxt ='';
+		if(newPlace == 'Market'){												
+			costTxt = '<br>Cost : ' + this.aniCost;							
+		}
+		if(noRem == true){
+
+		} else {
+			let divToRemove = document.getElementById("Div" + this.aniId);		
+			divToRemove.remove();
+		}	
+												
+
+		let newDiv = document.createElement("div");
+		newDiv.id = "Div" + this.aniId;						
+		newDiv.classList.add('marketDivCss');	
+
+		let newSpan = document.createElement("span");
+		let str = this.aniName + '<br>' + 'Size : ' + this.aniSize +
+			'<br>Attractivity : ' + this.aniAttract +
+			costTxt;
+		newSpan.insertAdjacentHTML( 'beforeend', str );
+
+		newDiv.appendChild(newSpan);
+
+		if (newPlace == 'Market'){
+			let id = this.aniId;
+			let btBuyAni = document.createElement("button");
+			btBuyAni.id = "Bt" + this.aniId;
+			btBuyAni.classList.add('btBuyAni');
+			btBuyAni.textContent = "Buy";
+			btBuyAni.addEventListener("click", function () {buyAnimalWrapper(id);});
+			newDiv.appendChild(btBuyAni);
+		}
+
+		let node = document.getElementById(newPlace);
+		node.appendChild(newDiv);
+		repopulateDropdownList();	
+	}
 }
 
+function moveAnimalWrapper(id, newPlace, newPlaceId, noRem){
+	for(let ani of availableList){
+		if(ani.aniId == id){
+			ani.moveAnimal(newPlace, newPlaceId, noRem);
+		}
+	}
+}
 
-function getInstance(){
-
+function buyAnimalWrapper(id){
+	for(let ani of availableList){
+		if(ani.aniId == id){
+			ani.buyAnimal();
+		}
+	}
 }
 
 function generateMarketList(){
@@ -41,80 +114,34 @@ function generateMarketList(){
 			let currentAnimal = baseAnimalList[randomElement].getInstance();						// Initialise the random animal
 			availableList.push(currentAnimal);														// Add the animal to the list of available animal
 
-			currentAnimal.aniId = availableList.length;												// Initialise the Id
+			currentAnimal.aniId = availableList.length -1;											// Initialise the Id
 			currentAnimal.aniPlace = 'Market';														// Change the place to market
 
 			v.marketCurrentCount = v.marketCurrentCount + 1;										// Add 1 to the number of animals in the market
 
-			// Create the required Div in the market screen
-
-			let marketDiv = document.createElement("div");
-			marketDiv.id = "Div" + currentAnimal.aniId;								
-			marketDiv.classList.add('marketDivCss');
-
-			let marketSpan = document.createElement	("span");
-			let str = currentAnimal.aniName + '<br>' + 'Size : ' + currentAnimal.aniSize +
-				'<br>Attractivity : ' + currentAnimal.aniAttract;
-
-			marketSpan.insertAdjacentHTML( 'beforeend', str );
-
-			// marketSpan.classList.add('aniNameCss');
-			marketDiv.appendChild(marketSpan);		
-
-			let btBuyAni = document.createElement("button");
-			btBuyAni.id = "Bt" + currentAnimal.aniId;
-			btBuyAni.classList.add('btBuyAni');
-			btBuyAni.textContent = "Buy";
-			btBuyAni.addEventListener("click", function () {moveAnimal(currentAnimal.aniId, 'holdingPen');});	
-
-			marketDiv.appendChild(btBuyAni);
-
-	    	let node = document.getElementById("Market");
-	    	node.appendChild(marketDiv);
-
 		} 
 	}
 };
 
 
-function moveAnimal(id, newPlace, newPlaceId){
 
-	for(i = 0; i < availableList.length; i++){
-		if(availableList[i].aniId == id){
-			let currentAnimal = availableList[i];
-
-			currentAnimal.aniPlace = newPlace;
-
-			if(newPlace == 'holdingPen'){
-				holdingPenList.push(currentAnimal);
-
-			} else if(newPlace == 'enclosure'){
-				newPlace = newPlace + newPlaceId;
-			}
-
-			let divToRemove = document.getElementById("Div" + currentAnimal.aniId);
-			divToRemove.remove();
-
-
-			let newDiv = document.createElement("div");
-			newDiv.id = "Div" + currentAnimal.aniId;						
-			newDiv.classList.add('marketDivCss');								
-
-			let newSpan = document.createElement("span");
-			let str = currentAnimal.aniName + '<br>' + 'Size : ' + currentAnimal.aniSize +
-				'<br>Attractivity : ' + currentAnimal.aniAttract;
-			newSpan.insertAdjacentHTML( 'beforeend', str );
-
-			newDiv.appendChild(newSpan);
-
-			let node = document.getElementById(newPlace);
-			node.appendChild(newDiv);
-		} 
+function initializeAni() {
+    for (let ani of loadedAniList) {
+	    availableList.push(new Animals({
+	        aniAttract: ani.aniAttract,
+			aniCost: ani.aniCost,
+			aniFood: ani.aniFood,
+			aniId: ani.aniId,
+			aniName: ani.aniName,
+			aniPlace: ani.aniPlace,
+			aniPlaceId: ani.aniPlaceId,
+			aniSize: ani.aniSize
+		    }))
 	}
-	repopulateDropdownList();	
-};
-
-
+	for (let ani of availableList){
+		moveAnimalWrapper(ani.aniId, ani.aniPlace, ani.aniEncId, true);
+	}	
+}
 
 
 var loadedAniList = [];

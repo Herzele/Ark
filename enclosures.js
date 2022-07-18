@@ -5,6 +5,8 @@ class Enclosure{
 	this.encId = params.encId;
 	this.encAnimal = "none";	
 	this.encSize = params.encSize;
+	this.encCurrentAni = 0;
+	this.encMaxAni = 2;
 
 	let encTxt = "";
 	if(this.encSize == 'Small'){
@@ -30,7 +32,7 @@ class Enclosure{
 	this.dropDown.id = "dd" + this.encId;
 	this.dropDown.classList.add("dropDownCss");
 
-	for(i = 0; i < availableList.length; i++){
+	for(let i = 0; i < availableList.length; i++){
 		if(availableList[i].aniPlace == 'holdingPen' && this.encSize == availableList[i].aniSize){
 		    let opt = document.createElement('option');
 		    opt.innerHTML = availableList[i].aniName;
@@ -46,14 +48,11 @@ class Enclosure{
 	this.btAdd.textContent = "Add";
 	let ddId = this.dropDown.id;
 	let enId = this.encId;
-	this.btAdd.addEventListener("click", function () {moveAnimal(getSelectedValue(ddId), 'enclosure', enId);});
-
+	this.btAdd.addEventListener("click", function () {isThereRoom(getSelectedValue(ddId), 'enclosure', enId);});
 	this.encDiv.appendChild(this.btAdd);
  
 	let node = document.getElementById("enclosureDiv");
     node.appendChild(this.encDiv);
-
-    // enclosureList.push(this);
 
 	}
 
@@ -63,21 +62,36 @@ class Enclosure{
 	};
 }
 
+
+function isThereRoom(aniId, newPlace, id){
+	let enc = enclosureList[id];
+	if(enc.encMaxAni > enc.encCurrentAni){
+		enc.encCurrentAni++;
+		moveAnimalWrapper(aniId, newPlace, id);
+	} else {
+		updateLogs('No more room in this enclosure');
+		return false;
+	}
+}
+
+
 function getSelectedValue(ddId){
-	let endValue = document.getElementById(ddId).options[document.getElementById(ddId).selectedIndex].value;
-	return endValue;
+	if(document.getElementById(ddId).selectedIndex != -1){
+		let endValue = document.getElementById(ddId).options[document.getElementById(ddId).selectedIndex].value;
+		return endValue;
+	}
 }
 
 function repopulateDropdownList(){
-	for(y = 0; y < enclosureList.length; y++){						// Loop through the list of the enclosures
+	for(let y = 0; y < enclosureList.length; y++){					// Loop through the list of the enclosures
 		let enc = enclosureList[y];									// Init. the current enclosure
 		let options = enc.dropDown.options;							// Initialize the options (the list of values in the dropDown)	
 
-		for(i = options.length-1; i >=0 ; i--){						// Reverse loop through the options of the current dropDown 
+		for(let i = options.length-1; i >=0 ; i--){					// Reverse loop through the options of the current dropDown 
 			enc.dropDown.removeChild(options[i]);					// Remove the options of the dropDown
 		}
 
-		for(z = 0; z < availableList.length; z++){
+		for(let z = 0; z < availableList.length; z++){
 			if(availableList[z].aniPlace == 'holdingPen' && enc.encSize == availableList[z].aniSize){
 			    let opt = document.createElement('option');
 			    opt.innerHTML = availableList[z].aniName;
@@ -90,25 +104,40 @@ function repopulateDropdownList(){
 }
 
 function createEnclosure(){
-	let enclosureId = enclosureList.length + 1;
+
+	let enclosureId = enclosureList.length;
 	let select = document.getElementById("encSizeSelector");
 	let enclosureSize = select.options[select.selectedIndex].value;
+	let encCost = 0;
+	for(let [key, value] of v.enclosureCost){
+		if(key == enclosureSize){
+			encCost = value;
+		}
+	}
 
-	let id = enclosureList.length;
+	if(v.money >= encCost){
+		v.money = v.money - encCost;
+		let id = enclosureList.length;
 
-	enclosureList[id] = new Enclosure({
-	encId: enclosureId,
-	encSize: enclosureSize});
+		enclosureList[id] = new Enclosure({
+		encId: enclosureId,
+		encSize: enclosureSize});
+	} else {
+		updateLogs('Not enough money');
+	}
+
+
 };
 
 
 function initializeEnc() {
-	for(i = 0; i < loadedEncList.length; i++){
-		enclosureList[enclosureList.length] = new Enclosure({
-		encId: loadedEncList[i].encId,
-		encSize: loadedEncList[i].encSize});
-	}
-};
+    for (let enc of loadedEncList) {
+        enclosureList.push(new Enclosure({
+            encId: enc.encId,
+            encSize: enc.encSize
+        }))
+    }
+}
 
 function constructator(id, size){
 	enclosureList[enclosureList.length] = new Enclosure({

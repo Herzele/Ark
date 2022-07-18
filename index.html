@@ -29,8 +29,8 @@
 <div class="ressources">
 	  <div id="moneyDiv">Money : <span id="money"></span> + <span id="moneyPerSec"></span> / day</div> 
 	  <div id="reputationDiv">Reputation : <span id="reputation"></span> + <span id="reputPerSec"></span> / day</div>
+	  <div id="attractivityDiv">Attractivity : <span id="attractivity"></span></div>	  
 	  <div>--------</div>
-
 	  <div id="visitorsDiv">Visitors per day : <span id="visitorsPerSec"></span></div>
 
 </div>
@@ -47,12 +47,13 @@
 		<div id="createEncDiv">
 			<button id="createEnclosure" onclick="createEnclosure()">Buy Enclosure</button>
 			<span>
-				<select id = "encSizeSelector">  
+				<select onchange="chgCostSpan()" id="encSizeSelector">  
 				  <option value="Small"> Small </option>  
 				  <option value="Medium"> Medium </option>  
 				  <option value="Large"> Large </option>  
 				</select>
 			</span>
+			<span>Cost : </span><span id='encCost'></span>
 		</div>
 
 		<div id="enclosureDiv" class="enclosureDivClass">
