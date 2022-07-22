@@ -6,8 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"> -->
-<!-- Latest compiled JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
 
@@ -27,11 +25,28 @@
 
 
 <div class="ressources">
-	  <div id="moneyDiv">Money : <span id="money"></span> + <span id="moneyPerSec"></span> / day</div> 
-	  <div id="reputationDiv">Reputation : <span id="reputation"></span> + <span id="reputPerSec"></span> / day</div>
-	  <div id="attractivityDiv">Attractivity : <span id="attractivity"></span></div>	  
-	  <div>--------</div>
-	  <div id="visitorsDiv">Visitors per day : <span id="visitorsPerSec"></span></div>
+	<div id='ressName'>
+		<div id="moneyDiv">Money : </div>
+		<div id="reputationDiv">Reputation : </div>
+		<div id="attractivityDiv">Attractivity : </div>
+		<div id="visitorsDiv">Visitors per day : </div>
+	</div>
+
+	<div id='ressStock'>
+		<div id="money"></div>
+		<div id="reputation"></div>
+		<div id="attractivity"></div>
+	</div>
+
+	<div id='ressGain'>
+		<div><span id="moneyPerSec"> </span><span>/s</span></div>
+		<div><span id="reputPerSec"> </span><span>/s</span></div>
+		<div><br></div>
+		<div><span id="visitorsPerSec"> </span><span>/s</span></div>
+	</div>
+
+
+	   
 
 </div>
 
@@ -40,6 +55,7 @@
 	<div class="tab">
 	  <button class="tablinks" id="parcTab" onclick="openTab(event, 'Parc')">Parc</button>
 	  <button class="tablinks" id="animalsTab" onclick="openTab(event, 'Animals')">Animals</button>
+	  <button class="tablinks" id="financeTab" onclick="openTab(event, 'Finance')">Finance</button>	 
 	  <button class="tablinks" id="marketTab" onclick="openTab(event, 'Market')">Market</button>
 	</div>
 
@@ -65,14 +81,22 @@
 		<div id="holdingPen">Holding Pen</div>
 	</div>
 
+	<div id="Finance" class="tabcontent">
+		<div id="pricing">
+			<label for="quantity">Entry price :</label>
+			<input type="number" id="entryPrice" onchange="chgEntryPrice()" min="1" max="5">
+		</div>
+	</div>
+
 	<div id="Market" class="tabcontent">
+		<button id='renewBt' onclick="renewMarket()">Renew market</button>
 		<div class="aniMarket"></div>
 		<div class="aniMarket"></div>
 		<div class="aniMarket"></div>
 		<div class="aniMarket"></div>
 	</div>
-
 </div>
+
 
 
 <div class="logs">
@@ -88,11 +112,13 @@
 
 </div>
 
+<script src="https://unpkg.com/@popperjs/core@2.11.5/dist/umd/popper.min.js"></script>
+<script src="https://unpkg.com/tippy.js@6.3.7/dist/tippy-bundle.umd.min.js"></script>
 
+<script type="text/javascript" src="tooltips.js"></script>
 <script type="text/javascript" src="enclosures.js"></script>
 <script type="text/javascript" src="animals.js"></script>
 <script type="text/javascript" src="main.js"></script>
-
 
 
 </body>

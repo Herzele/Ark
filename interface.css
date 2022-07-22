@@ -9,6 +9,7 @@
 }
 
 .ressources {
+  display: flex;
   width: 20%;
   height: 90%;
   float: left;
@@ -44,27 +45,6 @@
 }
 
 
-.tooltip .tooltiptext {
-  visibility: hidden;
-  width: 15%;
-  background-color: black;
-  color: #fff;
-  text-align: center;
-  border-radius: 6px;
-  padding-right: 2px;
-  padding-bottom: 5px;
-  padding-left: 2px;
-
-  /* Position the tooltip */
-  position: absolute;
-  z-index: 1;
-  display: inline-block;
-}
-
-.tooltip:hover .tooltiptext {
-  visibility: visible;
-}
-
 .valueInput{
   width: 30px;
   text-align: center;
@@ -95,6 +75,30 @@
 
 /* -------------------- RESSOURCES -------------------- */
 
+#ressStock{
+  width: 30%;
+  text-align: right;
+}
+
+#ressGain{
+  width: 30%;
+  text-align: right;
+}
+
+
+.ressTt{
+  display: flex;
+  width: 150px;
+}
+
+.ttName{
+  width: 75%;
+}
+
+.ttValue{
+  width: 25%;
+  text-align: right;
+}
 
 /* -------------------- Enclosures -------------------- */
 .enclosureDivClass{
@@ -234,3 +238,21 @@
   font-size: 16;
   font-style: italic;
 }
+
+
+
+#ttTest{
+  display: flex;
+}
+
+
+
+/* Separator test
+.gains:after {
+  content: "";
+  background-color: #000;
+  width: 1px;
+  top: 10px;
+  left: 50%;
+  display: block;
+}*/

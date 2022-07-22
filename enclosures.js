@@ -59,7 +59,7 @@ class Enclosure{
 	appendEncDiv(){
 		let node = document.getElementById("enclosureDiv");
     	node.appendChild(this.encDiv);
-	};
+	}
 }
 
 
@@ -125,8 +125,6 @@ function createEnclosure(){
 	} else {
 		updateLogs('Not enough money');
 	}
-
-
 };
 
 
