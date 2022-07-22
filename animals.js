@@ -56,8 +56,7 @@ class Animals{
 		} else {
 			let divToRemove = document.getElementById("Div" + this.aniId);		
 			divToRemove.remove();
-		}	
-												
+		}										
 
 		let newDiv = document.createElement("div");
 		newDiv.id = "Div" + this.aniId;						
@@ -83,7 +82,7 @@ class Animals{
 
 		let node = document.getElementById(newPlace);
 		node.appendChild(newDiv);
-		repopulateDropdownList();	
+		repopulateDropdownList();
 	}
 }
 
@@ -129,7 +128,7 @@ function generateMarketList(){
 	// Select random animals to add to the market list
 	let aniToAdd = v.marketMaxCapacity - v.marketCurrentCount;
 
-	if (aniToAdd > 0){			
+	if (aniToAdd > 0){		
 														// If there are empty slots in the market
 		for(i = 0; i < aniToAdd; i++){
 
@@ -163,14 +162,9 @@ function initializeAni() {
 		    }))
 	}
 	for (let ani of availableList){
-		if(ani.aniPlace != 'Market'){
-			moveAnimalWrapper(ani.aniId, ani.aniPlace, ani.aniPlaceId, true);	
-		}
-
+		moveAnimalWrapper(ani.aniId, ani.aniPlace, ani.aniPlaceId, true);	
 	}	
 }
-
-
 
 
 var loadedAniList = [];
@@ -180,13 +174,9 @@ var availableList = [];		// List of all animals bought or buyable. Used mainly t
 var holdingPenList = [];	// List of all animals currently in the holding pen
 
 
+/* ------ ANIMALS ------*/
 
-const fox = new Animals({
-	aniName: "Fox",
-	aniFood: "Carnivora",
-	aniSize: "Small",
-	aniTiers: 2,
-	aniAttract: 3});
+/* TIER 1*/
 
 const sheep = new Animals({
 	aniName: "Sheep",
@@ -202,12 +192,58 @@ const horse = new Animals({
 	aniTiers: 1,
 	aniAttract: 1});
 
+const cow = new Animals({
+	aniName: "Cow",
+	aniFood: "Herbivora",
+	aniSize: "Medium",
+	aniTiers: 1,
+	aniAttract: 1});
+
+const Rabbit = new Animals({
+	aniName: "Rabbit",
+	aniFood: "Herbivora",
+	aniSize: "Small",
+	aniTiers: 1,
+	aniAttract: 1});
+
+const Chicken = new Animals({
+	aniName: "Chicken",
+	aniFood: "Herbivora",
+	aniSize: "Small",
+	aniTiers: 1,
+	aniAttract: 1});
+
+const Duck = new Animals({
+	aniName: "Duck",
+	aniFood: "Herbivora",
+	aniSize: "Small",
+	aniTiers: 1,
+	aniAttract: 1});
+
+const Pig = new Animals({
+	aniName: "Pig",
+	aniFood: "Herbivora",
+	aniSize: "Medium",
+	aniTiers: 1,
+	aniAttract: 1});
+
+/* TIER 2*/
+
+const fox = new Animals({
+	aniName: "Fox",
+	aniFood: "Carnivora",
+	aniSize: "Small",
+	aniTiers: 2,
+	aniAttract: 3});
+
 const deer = new Animals({
 	aniName: "Deer",
 	aniFood: "Herbivora",
 	aniSize: "Medium",
 	aniTiers: 2,
 	aniAttract: 2});
+
+/* TIER 3*/
 
 const wolf = new Animals({
 	aniName: "Wolf",
@@ -216,12 +252,7 @@ const wolf = new Animals({
 	aniTiers: 3,
 	aniAttract: 4});
 
-const cow = new Animals({
-	aniName: "Cow",
-	aniFood: "Herbivora",
-	aniSize: "Medium",
-	aniTiers: 1,
-	aniAttract: 1});
+/* TIER 4*/
 
 const blackBear = new Animals({
 	aniName: "Black bear",
@@ -229,4 +260,3 @@ const blackBear = new Animals({
 	aniSize: "Medium",
 	aniTiers: 4,
 	aniAttract: 6});
-

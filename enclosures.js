@@ -25,6 +25,23 @@ class Enclosure{
 	this.encDiv.textContent = encTxt;
 	this.encDiv.id = 'enclosure' + this.encId;
 
+	let capaDiv = document.createElement("div");
+	capaDiv.classList.add('encCapaCss');
+
+	let spanCurrent = document.createElement("span");
+	let spanCrtStr = this.encCurrentAni + '/';
+	spanCurrent.id = 'spanCurrent' + this.encId;
+	spanCurrent.textContent = spanCrtStr;
+	capaDiv.appendChild(spanCurrent);
+
+	let spanMax = document.createElement("span");
+	let spanMaxStr = this.encMaxAni;
+	spanMax.id = 'spanMaxAni' + this.encId;
+	spanMax.textContent = spanMaxStr;
+	capaDiv.appendChild(spanMax);
+
+	this.encDiv.appendChild(capaDiv);
+
 	let br = document.createElement("br");
 	this.encDiv.appendChild(br);
 
@@ -59,7 +76,7 @@ class Enclosure{
 	appendEncDiv(){
 		let node = document.getElementById("enclosureDiv");
     	node.appendChild(this.encDiv);
-	}
+	}	
 }
 
 
@@ -67,7 +84,9 @@ function isThereRoom(aniId, newPlace, id){
 	let enc = enclosureList[id];
 	if(enc.encMaxAni > enc.encCurrentAni){
 		enc.encCurrentAni++;
-		moveAnimalWrapper(aniId, newPlace, id);
+		let spanId = 'spanCurrent' + enc.encId;
+		document.getElementById(spanId).innerHTML = enc.encCurrentAni + '/';
+		moveAnimalWrapper(aniId, newPlace, id);			// If yes, we move the animal
 	} else {
 		updateLogs('No more room in this enclosure');
 		return false;

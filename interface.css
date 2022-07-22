@@ -144,6 +144,12 @@
   display: inline-flex;
 }
 
+.encCapaCss{
+  display: inline-flex;
+  float: right;
+  margin-right: 2px;
+}
+
 /* -------------------- Market -------------------- */
 
 .marketDivCss{
@@ -151,6 +157,7 @@
   vertical-align: middle;
   border: 1px solid;
   margin-top: 1%;
+  margin-left: 1%;
 }
 
 
