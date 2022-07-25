@@ -138,7 +138,7 @@ function updateMoney(){
 
 // Reputation
 
-function calcReput(){
+function updateReput(){
 
     // Add reputation gain per sec to the total money amount    
     v.reputation = v.reputation + v.reputPerSec * v.timeMultiplier;
@@ -148,7 +148,7 @@ function calcReput(){
 
 }
 
-function updateReput(){
+function calcReput(){
 
     // Update the reputation gained per second
     v.reputPerSec = v.visitorsPerSec;
@@ -188,8 +188,8 @@ function calcAttractivity(){
     
     // Sum the attractivity of all animals in the zoo
     for(let ani of availableList){
-        if(ani.aniPlace == 'enclosure'){
-            v.attracAni += ani.aniAttract;
+        if(ani.Place == 'enclosure'){
+            v.attracAni += ani.Attract;
         }
     }
 
@@ -299,8 +299,6 @@ window.setInterval(function timeDay() {             // Fired once every second t
 }, 1000);
 
 window.setInterval(function timeDay() {             // Fired once every 0.2 second to update the calcs
-    addDay();
-
     calcMoney();
     calcReput();
     calcVisitors();

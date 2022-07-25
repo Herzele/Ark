@@ -2,17 +2,20 @@
 class Animals{
 	constructor (params){
 
-	this.aniName = params.aniName;
-	this.aniFood = params.aniFood;
-	this.aniSize = params.aniSize;
-	this.aniAttract = params.aniAttract;
-	this.aniCost = this.aniAttract * 1000;
-	this.aniPlace = params.aniPlace;
-	this.aniPlaceId = params.aniPlaceId;
-	this.aniEncId = params.aniEncId;
-	this.aniId = params.aniId;
-	this.aniTiers = params.aniTiers;
-
+	this.Name = params.Name;
+	this.Food = params.Food;
+	this.Size = params.Size;
+	this.Attract = params.Attract;
+	this.Cost = this.Attract * 1000;
+	this.Place = params.Place;
+	this.PlaceId = params.PlaceId;
+	this.EncId = params.EncId;
+	this.Id = params.Id;
+	this.Tiers = params.Tiers;
+	this.Space = params.Space;
+	this.MaxAge = params.MaxAge;
+	this.MaxAgeDays = this.MaxAge * 365;
+	this.BirthDay = params.BirthDay;
 	baseAnimalList.push(this);
 
 	}
@@ -20,18 +23,22 @@ class Animals{
 	getInstance(){
 		let baseIdentifier = availableList.length;
 		return baseIdentifier = new Animals({
-			aniName: this.aniName,
-			aniFood: this.aniFood,
-			aniSize: this.aniSize,
-			aniAttract: this.aniAttract,
-			aniTiers: this.aniTiers,
-			aniEncId: this.aniEncId});
+			Name: this.Name,
+			Food: this.Food,
+			Size: this.Size,
+			Attract: this.Attract,
+			Tiers: this.Tiers,
+			Space: this.Space,
+			MaxAge: this.MaxAge,
+			MaxAgeDays: this.MaxAgeDays,
+			BirthDay: v.daysElapsed,		
+			EncId: this.EncId});
 	}
 
 	buyAnimal(){
-		if(v.money >= this.aniCost){
+		if(v.money >= this.Cost){
 			holdingPenList.push(this);
-			v.money = v.money - this.aniCost;
+			v.money = v.money - this.Cost;
 			this.moveAnimal('holdingPen');
 		} else {
 			updateLogs("Not enough money");
@@ -40,40 +47,40 @@ class Animals{
 
 	moveAnimal(newPlace, newPlaceId, noRem){
 
-		this.aniPlace = newPlace;
+		this.Place = newPlace;
 
 		if(newPlaceId != undefined){
 			newPlace = newPlace + newPlaceId;
-			this.aniPlaceId = newPlaceId;	
+			this.PlaceId = newPlaceId;	
 		}
 
 		let costTxt ='';
 		if(newPlace == 'Market'){												
-			costTxt = '<br>Cost : ' + this.aniCost;							
+			costTxt = '<br>Cost : ' + this.Cost;							
 		}
 		if(noRem == true){
 
 		} else {
-			let divToRemove = document.getElementById("Div" + this.aniId);		
+			let divToRemove = document.getElementById("Div" + this.Id);		
 			divToRemove.remove();
 		}										
 
 		let newDiv = document.createElement("div");
-		newDiv.id = "Div" + this.aniId;						
+		newDiv.id = "Div" + this.Id;						
 		newDiv.classList.add('marketDivCss');	
 
 		let newSpan = document.createElement("span");
-		let str = this.aniName + '<br>' + 'Size : ' + this.aniSize +
-			'<br>Attractivity : ' + this.aniAttract +
+		let str = this.Name + '<br>' + 'Size : ' + this.Size +
+			'<br>Attractivity : ' + this.Attract +
 			costTxt;
 		newSpan.insertAdjacentHTML( 'beforeend', str );
 
 		newDiv.appendChild(newSpan);
 
 		if (newPlace == 'Market'){
-			let id = this.aniId;
+			let id = this.Id;
 			let btBuyAni = document.createElement("button");
-			btBuyAni.id = "Bt" + this.aniId;
+			btBuyAni.id = "Bt" + this.Id;
 			btBuyAni.classList.add('btBuyAni');
 			btBuyAni.textContent = "Buy";
 			btBuyAni.addEventListener("click", function () {buyAnimalWrapper(id);});
@@ -86,12 +93,13 @@ class Animals{
 	}
 }
 
+
 function renewMarket(){
 	if(v.reputation >= v.renewMrktCost){
 		v.reputation = v.reputation - v.renewMrktCost;
 		generateMarketList();
 		for (let ani of availableList){
-			moveAnimalWrapper(ani.aniId, ani.aniPlace, ani.aniPlaceId, false);
+			moveAnimalWrapper(ani.Id, ani.Place, ani.PlaceId, false);
 		}	
 	} else {
 		updateLogs("Not enough reputation")
@@ -100,7 +108,7 @@ function renewMarket(){
 
 function moveAnimalWrapper(id, newPlace, newPlaceId, noRem){
 	for(let ani of availableList){
-		if(ani.aniId == id){
+		if(ani.Id == id){
 			ani.moveAnimal(newPlace, newPlaceId, noRem);
 		}
 	}
@@ -108,7 +116,7 @@ function moveAnimalWrapper(id, newPlace, newPlaceId, noRem){
 
 function buyAnimalWrapper(id){
 	for(let ani of availableList){
-		if(ani.aniId == id){
+		if(ani.Id == id){
 			ani.buyAnimal();
 		}
 	}
@@ -117,7 +125,7 @@ function buyAnimalWrapper(id){
 
 function updateTiers(){
 	for(let ani of baseAnimalList){
-		if(ani.aniTiers <= v.animalTiers){
+		if(ani.Tiers <= v.animalTiers){
 			eligibleList.push(ani);
 		}
 	}
@@ -136,11 +144,11 @@ function generateMarketList(){
 			let currentAnimal = eligibleList[randomElement].getInstance();							// Initialise the random animal
 			availableList.push(currentAnimal);														// Add the animal to the list of available animal
 
-			currentAnimal.aniId = availableList.length -1;											// Initialise the Id to be the same as the animal's index in the list
-			currentAnimal.aniPlace = 'Market';														// Change the place to market
+			currentAnimal.Id = availableList.length -1;												// Initialise the Id to be the same as the animal's index in the list
+			currentAnimal.Place = 'Market';															// Change the place to market
 
 			v.marketCurrentCount = v.marketCurrentCount + 1;										// Add 1 to the number of animals in the market
-			moveAnimalWrapper(currentAnimal.aniId, currentAnimal.aniPlace, null, true);
+			moveAnimalWrapper(currentAnimal.Id, currentAnimal.Place, null, true);
 		}
 	}
 };
@@ -150,19 +158,23 @@ function generateMarketList(){
 function initializeAni() {
     for (let ani of loadedAniList) {
 	    availableList.push(new Animals({
-	        aniAttract: ani.aniAttract,
-			aniCost: ani.aniCost,
-			aniFood: ani.aniFood,
-			aniId: ani.aniId,
-			aniName: ani.aniName,
-			aniPlace: ani.aniPlace,
-			aniPlaceId: ani.aniPlaceId,
-			aniSize: ani.aniSize,
-			aniTiers: ani.aniTiers
+	        Attract: ani.Attract,
+			Cost: ani.Cost,
+			Food: ani.Food,
+			Id: ani.Id,
+			Name: ani.Name,
+			Place: ani.Place,
+			PlaceId: ani.PlaceId,
+			Size: ani.Size,
+			Tiers: ani.Tiers,
+			Space: ani.Space,
+			MaxAge: MaxAge,
+			MaxAgeDays: MaxAgeDays,
+			BirthDay: BirthDay
 		    }))
 	}
 	for (let ani of availableList){
-		moveAnimalWrapper(ani.aniId, ani.aniPlace, ani.aniPlaceId, true);	
+		moveAnimalWrapper(ani.Id, ani.Place, ani.PlaceId, true);	
 	}	
 }
 
@@ -179,84 +191,106 @@ var holdingPenList = [];	// List of all animals currently in the holding pen
 /* TIER 1*/
 
 const sheep = new Animals({
-	aniName: "Sheep",
-	aniFood: "Herbivora",
-	aniSize: "Medium",
-	aniTiers: 1,
-	aniAttract: 1});
+	Name: "Sheep",
+	Food: "Herbivora",
+	Size: "Medium",
+	Tiers: 1,
+	Space: 2,
+	MaxAge: 12,	
+	Attract: 1});
 
 const horse = new Animals({
-	aniName: "Horse",
-	aniFood: "Herbivora",
-	aniSize: "Medium",
-	aniTiers: 1,
-	aniAttract: 1});
+	Name: "Horse",
+	Food: "Herbivora",
+	Size: "Medium",
+	Tiers: 1,
+	Space: 2,	
+	MaxAge: 27,		
+	Attract: 1});
 
 const cow = new Animals({
-	aniName: "Cow",
-	aniFood: "Herbivora",
-	aniSize: "Medium",
-	aniTiers: 1,
-	aniAttract: 1});
+	Name: "Cow",
+	Food: "Herbivora",
+	Size: "Medium",
+	Tiers: 1,
+	Space: 2,	
+	MaxAge: 20,		
+	Attract: 1});
 
 const Rabbit = new Animals({
-	aniName: "Rabbit",
-	aniFood: "Herbivora",
-	aniSize: "Small",
-	aniTiers: 1,
-	aniAttract: 1});
+	Name: "Rabbit",
+	Food: "Herbivora",
+	Size: "Small",
+	Tiers: 1,
+	Space: 1,
+	MaxAge: 9,		
+	Attract: 1});
 
 const Chicken = new Animals({
-	aniName: "Chicken",
-	aniFood: "Herbivora",
-	aniSize: "Small",
-	aniTiers: 1,
-	aniAttract: 1});
+	Name: "Chicken",
+	Food: "Herbivora",
+	Size: "Small",
+	Tiers: 1,
+	Space: 1,
+	MaxAge: 7,			
+	Attract: 1});
 
 const Duck = new Animals({
-	aniName: "Duck",
-	aniFood: "Herbivora",
-	aniSize: "Small",
-	aniTiers: 1,
-	aniAttract: 1});
+	Name: "Duck",
+	Food: "Herbivora",
+	Size: "Small",
+	Tiers: 1,
+	Space: 1,		
+	MaxAge: 10,	
+	Attract: 1});
 
 const Pig = new Animals({
-	aniName: "Pig",
-	aniFood: "Herbivora",
-	aniSize: "Medium",
-	aniTiers: 1,
-	aniAttract: 1});
+	Name: "Pig",
+	Food: "Herbivora",
+	Size: "Medium",
+	Tiers: 1,
+	Space: 2,	
+	MaxAge: 17,		
+	Attract: 1});
 
 /* TIER 2*/
 
 const fox = new Animals({
-	aniName: "Fox",
-	aniFood: "Carnivora",
-	aniSize: "Small",
-	aniTiers: 2,
-	aniAttract: 3});
+	Name: "Fox",
+	Food: "Carnivora",
+	Size: "Small",
+	Tiers: 2,
+	Space: 1,		
+	MaxAge: 12,	
+	Attract: 3});
 
 const deer = new Animals({
-	aniName: "Deer",
-	aniFood: "Herbivora",
-	aniSize: "Medium",
-	aniTiers: 2,
-	aniAttract: 2});
+	Name: "Deer",
+	Food: "Herbivora",
+	Size: "Medium",
+	Tiers: 2,
+	Space: 2,	
+	MaxAge: 6,		
+	Attract: 2});
 
 /* TIER 3*/
 
 const wolf = new Animals({
-	aniName: "Wolf",
-	aniFood: "Carnivora",
-	aniSize: "Medium",
-	aniTiers: 3,
-	aniAttract: 4});
+	Name: "Wolf",
+	Food: "Carnivora",
+	Size: "Medium",
+	Tiers: 3,
+	Space: 2,		
+	MaxAge: 13,	
+	Attract: 4});
 
 /* TIER 4*/
 
 const blackBear = new Animals({
-	aniName: "Black bear",
-	aniFood: "Carnivora",
-	aniSize: "Medium",
-	aniTiers: 4,
-	aniAttract: 6});
+	Name: "Black bear",
+	Food: "Carnivora",
+	Size: "Medium",
+	Tiers: 4,
+	Space: 3,	
+	MaxAge: 30,		
+	Attract: 6});

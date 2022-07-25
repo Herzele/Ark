@@ -7,17 +7,22 @@ class Enclosure{
 	this.encSize = params.encSize;
 	this.encCurrentAni = 0;
 	this.encMaxAni = 2;
+	this.encMaxSpace = params.encMaxSpace;
+	this.encCurrentSpace = 0;	
 
 	let encTxt = "";
 	if(this.encSize == 'Small'){
 		this.encCssClass = 'enclosureSmall';
 		encTxt = "Small Enclosure";
+		this.encMaxSpace = 2;
 	} else if(this.encSize =='Medium'){
 		this.encCssClass = 'enclosureMedium';
 		encTxt = "Medium Enclosure";
+		this.encMaxSpace = 5;		
 	} else {
 		this.encCssClass = 'enclosureLarge';
 		encTxt = "Large Enclosure";
+		this.encMaxSpace = 10;		
 	};
 
 	this.encDiv = document.createElement("div");
@@ -35,8 +40,8 @@ class Enclosure{
 	capaDiv.appendChild(spanCurrent);
 
 	let spanMax = document.createElement("span");
-	let spanMaxStr = this.encMaxAni;
-	spanMax.id = 'spanMaxAni' + this.encId;
+	let spanMaxStr = this.encMaxSpace;
+	spanMax.id = 'spanMaxSpace' + this.encId;
 	spanMax.textContent = spanMaxStr;
 	capaDiv.appendChild(spanMax);
 
@@ -50,11 +55,11 @@ class Enclosure{
 	this.dropDown.classList.add("dropDownCss");
 
 	for(let i = 0; i < availableList.length; i++){
-		if(availableList[i].aniPlace == 'holdingPen' && this.encSize == availableList[i].aniSize){
+		if(availableList[i].Place == 'holdingPen' && this.encSize == availableList[i].Size){
 		    let opt = document.createElement('option');
-		    opt.innerHTML = availableList[i].aniName;
-		    opt.text = availableList[i].aniName;
-		    opt.value = availableList[i].aniId;
+		    opt.innerHTML = availableList[i].Name;
+		    opt.text = availableList[i].Name;
+		    opt.value = availableList[i].Id;
 		    this.dropDown.appendChild(opt);
 		}
 	}
@@ -81,15 +86,18 @@ class Enclosure{
 
 
 function isThereRoom(aniId, newPlace, id){
-	let enc = enclosureList[id];
-	if(enc.encMaxAni > enc.encCurrentAni){
-		enc.encCurrentAni++;
-		let spanId = 'spanCurrent' + enc.encId;
-		document.getElementById(spanId).innerHTML = enc.encCurrentAni + '/';
-		moveAnimalWrapper(aniId, newPlace, id);			// If yes, we move the animal
-	} else {
-		updateLogs('No more room in this enclosure');
-		return false;
+	if(aniId != undefined){																// Check if an animal is selected
+		let enc = enclosureList[id];
+		let aniSpace = availableList[aniId].Space;
+		if(enc.encMaxSpace - enc.encCurrentSpace >= aniSpace){
+			enc.encCurrentSpace = enc.encCurrentSpace + aniSpace;
+			let spanId = 'spanCurrent' + enc.encId;
+			document.getElementById(spanId).innerHTML = enc.encCurrentSpace + '/';
+			moveAnimalWrapper(aniId, newPlace, id);										// If yes, we move the animal
+		} else {
+			updateLogs('No more room in this enclosure');
+			return false;
+		}
 	}
 }
 
@@ -111,11 +119,11 @@ function repopulateDropdownList(){
 		}
 
 		for(let z = 0; z < availableList.length; z++){
-			if(availableList[z].aniPlace == 'holdingPen' && enc.encSize == availableList[z].aniSize){
+			if(availableList[z].Place == 'holdingPen' && enc.encSize == availableList[z].Size){
 			    let opt = document.createElement('option');
-			    opt.innerHTML = availableList[z].aniName;
-			    opt.text = availableList[z].aniName;
-			    opt.value = availableList[z].aniId;
+			    opt.innerHTML = availableList[z].Name;
+			    opt.text = availableList[z].Name;
+			    opt.value = availableList[z].Id;
 			    enc.dropDown.appendChild(opt);
 			}
 		}
