@@ -2,6 +2,11 @@
   box-sizing: border-box;
 }
 
+html,body{
+  height: 100%;
+  margin: 0;
+}
+
 .header {
   border: 1px solid black;
   padding: 15px;
@@ -11,7 +16,7 @@
 .ressources {
   display: flex;
   width: 20%;
-  height: 90%;
+  height: 80%;
   float: left;
   padding: 15px;
   border: 1px solid black;
@@ -19,24 +24,25 @@
 
 .interface {
   width: 58%;
-  height: 90%;
+  height: 80%;
   float: left;
   padding: 15px;
   border: 1px solid black;
   margin-left: 1%;
   margin-right: 1%;
+  overflow-y: auto;
 }
 
 .logs {
   width: 20%;
-  height: 90%;
+  height: 80%;
   float: left;
   padding: 15px;
   border: 1px solid black;
 }
 
 .bottomBar {
-  height: 8%;
+  height: 5%;
   width: 99%;
   position: fixed;
   bottom: 1%;
@@ -68,10 +74,6 @@
   font-size: 18px;
 }
 
-#btTestMode{
-  display: none;
-}
-
 
 /* -------------------- RESSOURCES -------------------- */
 
@@ -100,7 +102,7 @@
   text-align: right;
 }
 
-/* -------------------- Enclosures -------------------- */
+/* -------------------- ENCLOSURES -------------------- */
 .enclosureDivClass{
   display: flex;
   flex-wrap: wrap;
@@ -150,7 +152,7 @@
   margin-right: 2px;
 }
 
-/* -------------------- Market -------------------- */
+/* -------------------- MARKET -------------------- */
 
 .marketDivCss{
   display: flex;
@@ -171,7 +173,7 @@
   text-align: center;
 }
 
-/* -------------------- Animals -------------------- */
+/* -------------------- ANIMALS -------------------- */
 #holdingPen{
   border: 1px solid;
 }
@@ -217,19 +219,7 @@
   border-top: none;
 }
 
-#personnalTrainingTab{
-  display: none;
-}
-
-#humanRessourcesTab{
-  display: none;
-}
-
-#investmentsTab{
-  display: none;
-}
-
-#faithProofsTab{
+#graveyardTab{
   display: none;
 }
 

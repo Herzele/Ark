@@ -2,46 +2,50 @@
 class Enclosure{
 	constructor (params){
 
-	this.encId = params.encId;
-	this.encAnimal = "none";	
-	this.encSize = params.encSize;
-	this.encCurrentAni = 0;
-	this.encMaxAni = 2;
-	this.encMaxSpace = params.encMaxSpace;
-	this.encCurrentSpace = 0;	
+	this.Id = params.Id;
+	this.Animal = "none";	
+	this.Size = params.Size;
+	this.CurrentAni = 0;
+	this.MaxAni = 2;
+	this.MaxSpace = params.MaxSpace;
+	this.CurrentSpace = params.CurrentSpace;	
 
 	let encTxt = "";
-	if(this.encSize == 'Small'){
+	if(this.Size == 'Small'){
 		this.encCssClass = 'enclosureSmall';
 		encTxt = "Small Enclosure";
-		this.encMaxSpace = 2;
-	} else if(this.encSize =='Medium'){
+		this.MaxSpace = 2;
+	} else if(this.Size =='Medium'){
 		this.encCssClass = 'enclosureMedium';
 		encTxt = "Medium Enclosure";
-		this.encMaxSpace = 5;		
+		this.MaxSpace = 5;		
 	} else {
 		this.encCssClass = 'enclosureLarge';
 		encTxt = "Large Enclosure";
-		this.encMaxSpace = 10;		
+		this.MaxSpace = 10;		
 	};
 
 	this.encDiv = document.createElement("div");
 	this.encDiv.classList.add(this.encCssClass);
 	this.encDiv.textContent = encTxt;
-	this.encDiv.id = 'enclosure' + this.encId;
+	this.encDiv.id = 'enclosure' + this.Id;
 
 	let capaDiv = document.createElement("div");
 	capaDiv.classList.add('encCapaCss');
 
 	let spanCurrent = document.createElement("span");
-	let spanCrtStr = this.encCurrentAni + '/';
-	spanCurrent.id = 'spanCurrent' + this.encId;
+	let spanCrtStr = this.CurrentSpace;
+	spanCurrent.id = 'spanCurrent' + this.Id;
 	spanCurrent.textContent = spanCrtStr;
 	capaDiv.appendChild(spanCurrent);
 
+	let spanDash = document.createElement("span");
+	spanDash.textContent = '/';
+	capaDiv.appendChild(spanDash);
+
 	let spanMax = document.createElement("span");
-	let spanMaxStr = this.encMaxSpace;
-	spanMax.id = 'spanMaxSpace' + this.encId;
+	let spanMaxStr = this.MaxSpace;
+	spanMax.id = 'spanMaxSpace' + this.Id;
 	spanMax.textContent = spanMaxStr;
 	capaDiv.appendChild(spanMax);
 
@@ -51,11 +55,11 @@ class Enclosure{
 	this.encDiv.appendChild(br);
 
 	this.dropDown = document.createElement("select");
-	this.dropDown.id = "dd" + this.encId;
+	this.dropDown.id = "dd" + this.Id;
 	this.dropDown.classList.add("dropDownCss");
 
 	for(let i = 0; i < availableList.length; i++){
-		if(availableList[i].Place == 'holdingPen' && this.encSize == availableList[i].Size){
+		if(availableList[i].Place == 'holdingPen' && this.Size == availableList[i].Size){
 		    let opt = document.createElement('option');
 		    opt.innerHTML = availableList[i].Name;
 		    opt.text = availableList[i].Name;
@@ -69,10 +73,10 @@ class Enclosure{
 	this.btAdd.classList.add('btAddAnimalCss');
 	this.btAdd.textContent = "Add";
 	let ddId = this.dropDown.id;
-	let enId = this.encId;
+	let enId = this.Id;
 	this.btAdd.addEventListener("click", function () {isThereRoom(getSelectedValue(ddId), 'enclosure', enId);});
 	this.encDiv.appendChild(this.btAdd);
- 
+
 	let node = document.getElementById("enclosureDiv");
     node.appendChild(this.encDiv);
 
@@ -89,10 +93,10 @@ function isThereRoom(aniId, newPlace, id){
 	if(aniId != undefined){																// Check if an animal is selected
 		let enc = enclosureList[id];
 		let aniSpace = availableList[aniId].Space;
-		if(enc.encMaxSpace - enc.encCurrentSpace >= aniSpace){
-			enc.encCurrentSpace = enc.encCurrentSpace + aniSpace;
-			let spanId = 'spanCurrent' + enc.encId;
-			document.getElementById(spanId).innerHTML = enc.encCurrentSpace + '/';
+		if(enc.MaxSpace - enc.CurrentSpace >= aniSpace){
+			enc.CurrentSpace = enc.CurrentSpace + aniSpace;
+			let spanId = 'spanCurrent' + enc.Id;
+			document.getElementById(spanId).innerHTML = enc.CurrentSpace;
 			moveAnimalWrapper(aniId, newPlace, id);										// If yes, we move the animal
 		} else {
 			updateLogs('No more room in this enclosure');
@@ -119,7 +123,7 @@ function repopulateDropdownList(){
 		}
 
 		for(let z = 0; z < availableList.length; z++){
-			if(availableList[z].Place == 'holdingPen' && enc.encSize == availableList[z].Size){
+			if(availableList[z].Place == 'holdingPen' && enc.Size == availableList[z].Size){
 			    let opt = document.createElement('option');
 			    opt.innerHTML = availableList[z].Name;
 			    opt.text = availableList[z].Name;
@@ -147,8 +151,9 @@ function createEnclosure(){
 		let id = enclosureList.length;
 
 		enclosureList[id] = new Enclosure({
-		encId: enclosureId,
-		encSize: enclosureSize});
+		Id: enclosureId,
+		Size: enclosureSize,
+		CurrentSpace: 0});
 	} else {
 		updateLogs('Not enough money');
 	}
@@ -158,16 +163,17 @@ function createEnclosure(){
 function initializeEnc() {
     for (let enc of loadedEncList) {
         enclosureList.push(new Enclosure({
-            encId: enc.encId,
-            encSize: enc.encSize
+            Id: enc.Id,
+            Size: enc.Size,
+            CurrentSpace: enc.CurrentSpace
         }))
     }
 }
 
 function constructator(id, size){
 	enclosureList[enclosureList.length] = new Enclosure({
-	encId: id,
-	encSize: size});
+	Id: id,
+	Size: size});
 }
 
 var enclosureList = [];

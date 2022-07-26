@@ -19,7 +19,6 @@
 
 <div class="header">
   <span id="gameTitle">Ark</span>
-  <button type="button" id="btTestMode" onclick="activateTestMode()">TEST MODE</button>
   <span id="dateJour"></span>
 </div>
 
@@ -57,6 +56,7 @@
 	  <button class="tablinks" id="animalsTab" onclick="openTab(event, 'Animals')">Animals</button>
 	  <button class="tablinks" id="financeTab" onclick="openTab(event, 'Finance')">Finance</button>	 
 	  <button class="tablinks" id="marketTab" onclick="openTab(event, 'Market')">Market</button>
+	  <button class="tablinks" id="graveyardTab" onclick="openTab(event, 'Graveyard')">Graveyard</button>
 	</div>
 
 	<div id="Parc" class="tabcontent">
@@ -95,9 +95,13 @@
 		<div class="aniMarket"></div>
 		<div class="aniMarket"></div>
 	</div>
+
+	<div id="Graveyard" class="tabcontent">
+
+	</div>
+
 </div>
-
-
+</div>
 
 <div class="logs">
 	<span id="logsDisplay"></span>
@@ -108,7 +112,7 @@
 
 	<div><button type="button" class="btnSmall" id="btSave" onclick="saveGame()">SAVE</button></div>
 	<div><button type="button" class="btnSmall" id="btDelete" onclick="deleteSave()">Hard Reset</button></div>
-	<div><button type="button" class="btnSmall" id="btTest" onclick="initializeEnc()">Test stuff</button></div>
+<!-- 	<div><button type="button" class="btnSmall" id="btTest" onclick="initializeEnc()">Test stuff</button></div> -->
 
 </div>
 

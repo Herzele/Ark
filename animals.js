@@ -7,6 +7,7 @@ class Animals{
 	this.Size = params.Size;
 	this.Attract = params.Attract;
 	this.Cost = this.Attract * 1000;
+	this.CostType = params.CostType;
 	this.Place = params.Place;
 	this.PlaceId = params.PlaceId;
 	this.EncId = params.EncId;
@@ -14,57 +15,104 @@ class Animals{
 	this.Tiers = params.Tiers;
 	this.Space = params.Space;
 	this.MaxAge = params.MaxAge;
-	this.MaxAgeDays = this.MaxAge * 365;
 	this.BirthDay = params.BirthDay;
+
 	baseAnimalList.push(this);
 
 	}
 
 	getInstance(){
 		let baseIdentifier = availableList.length;
+		let costType = '';
+		if(this.Tiers == 1){							// Only Tiers 1 animals can be bought with money, so when we create the animal instance we select with which currency he can be bought.
+			costType = 'money';
+		} else {
+			costType = 'reputation';
+		}
 		return baseIdentifier = new Animals({
 			Name: this.Name,
 			Food: this.Food,
 			Size: this.Size,
 			Attract: this.Attract,
+			CostType: costType,
 			Tiers: this.Tiers,
 			Space: this.Space,
 			MaxAge: this.MaxAge,
-			MaxAgeDays: this.MaxAgeDays,
-			BirthDay: v.daysElapsed,		
 			EncId: this.EncId});
 	}
 
+	updateAge(){
+		let spanId = 'aniAge' + this.Id;
+		let aniSpan = document.getElementById(spanId);
+		let currentAge = Math.ceil((v.daysElapsed - this.BirthDay) / 365);
+		if(currentAge > this.MaxAge){												// Code to manage the death of animals
+			this.moveAnimal('Graveyard');											
+			updateLogs('Your ' + this.Name + ' is dead.')
+			let aniSpan = document.getElementById(spanId);							// Update the age of death for the graveyard 
+			aniSpan.innerHTML = currentAge;											
+			if(v.isVisibleGraveyard == false){										// Change the variable to show the Graveyard tab from now on
+				v.isVisibleGraveyard = true;
+				document.getElementById('graveyardTab').style.display = 'inline';
+			}
+		}
+		if(aniSpan != undefined){
+			aniSpan.innerHTML = currentAge;
+		}
+	}
+
 	buyAnimal(){
-		if(v.money >= this.Cost){
-			holdingPenList.push(this);
-			v.money = v.money - this.Cost;
-			this.moveAnimal('holdingPen');
-		} else {
-			updateLogs("Not enough money");
+		if(this.CostType == 'money'){
+			if(v.money >= this.Cost){
+				this.BirthDay = v.daysElapsed;
+				holdingPenList.push(this);
+				v.money = v.money - this.Cost;
+				this.moveAnimal('holdingPen');
+			} else {
+				updateLogs("Not enough money");
+			}
+		} else if (this.CostType == 'reputation'){
+			if(v.reputation >= this.Cost){
+				this.BirthDay = v.daysElapsed;
+				holdingPenList.push(this);
+				v.reputation = v.reputation - this.Cost;
+				this.moveAnimal('holdingPen');
+			} else {
+				updateLogs("Not enough money");
+			}
 		}
 	}
 
 	moveAnimal(newPlace, newPlaceId, noRem){
 
+		let oldPlace = this.Place;				// Store the place before the changes
+		if(oldPlace == 'enclosure'){
+			let currentEnc = enclosureList[this.PlaceId];
+			currentEnc.CurrentSpace = currentEnc.CurrentSpace - this.Space;
+
+			let span = 'spanCurrent' + this.PlaceId;
+			document.getElementById(span).innerHTML = currentEnc.CurrentSpace;
+		}
+
 		this.Place = newPlace;
 
-		if(newPlaceId != undefined){
+		if(newPlaceId != undefined){			// The newPlaceId is defined solely for the enclosures, so if it's defined, we use it to create the div
 			newPlace = newPlace + newPlaceId;
 			this.PlaceId = newPlaceId;	
 		}
 
-		let costTxt ='';
+		let costTxt ='';														// Initialize conditionnal string
 		if(newPlace == 'Market'){												
-			costTxt = '<br>Cost : ' + this.Cost;							
+			costTxt = '<br>Cost : ' + this.Cost + ' ' + this.CostType;							
+		} else {
+			costTxt = "<br>Age : <span id='aniAge" + this.Id + "'</span>";
 		}
 		if(noRem == true){
 
-		} else {
+		} else {															// If the noRem is not true, we remove the existing Div
 			let divToRemove = document.getElementById("Div" + this.Id);		
 			divToRemove.remove();
 		}										
-
+ 
 		let newDiv = document.createElement("div");
 		newDiv.id = "Div" + this.Id;						
 		newDiv.classList.add('marketDivCss');	
@@ -85,6 +133,16 @@ class Animals{
 			btBuyAni.textContent = "Buy";
 			btBuyAni.addEventListener("click", function () {buyAnimalWrapper(id);});
 			newDiv.appendChild(btBuyAni);
+		}
+
+		if (newPlace == 'enclosure' + newPlaceId){
+			let id = this.Id;
+			let btRemove = document.createElement("button");
+			btRemove.id = "Bt" + this.Id;
+			btRemove.classList.add('btBuyAni');
+			btRemove.textContent = "Remove";
+			btRemove.addEventListener("click", function () {moveAnimalWrapper(id, 'holdingPen');});
+			newDiv.appendChild(btRemove);	
 		}
 
 		let node = document.getElementById(newPlace);
@@ -153,6 +211,13 @@ function generateMarketList(){
 	}
 };
 
+function updateAgesWrapper(){
+	for(let ani of availableList){
+		if(ani.Place != 'Graveyard'){
+			ani.updateAge();
+		}
+	}
+}
 
 
 function initializeAni() {
@@ -168,9 +233,8 @@ function initializeAni() {
 			Size: ani.Size,
 			Tiers: ani.Tiers,
 			Space: ani.Space,
-			MaxAge: MaxAge,
-			MaxAgeDays: MaxAgeDays,
-			BirthDay: BirthDay
+			MaxAge: ani.MaxAge,
+			BirthDay: ani.BirthDay
 		    }))
 	}
 	for (let ani of availableList){
@@ -187,6 +251,16 @@ var holdingPenList = [];	// List of all animals currently in the holding pen
 
 
 /* ------ ANIMALS ------*/
+
+// /* TEST TIER*/
+// const Dwarf = new Animals({
+// 	Name: "Dwarf",
+// 	Food: "Herbivora",
+// 	Size: "Small",
+// 	Tiers: 1,
+// 	Space: 1,
+// 	MaxAge: 3,	
+// 	Attract: 1});
 
 /* TIER 1*/
 
