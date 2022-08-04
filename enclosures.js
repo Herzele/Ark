@@ -3,12 +3,13 @@ class Enclosure{
 	constructor (params){
 
 	this.Id = params.Id;
-	this.Animal = "none";	
+	this.Animal = [];	
 	this.Size = params.Size;
 	this.CurrentAni = 0;
 	this.MaxAni = 2;
 	this.MaxSpace = params.MaxSpace;
-	this.CurrentSpace = params.CurrentSpace;	
+	this.CurrentSpace = params.CurrentSpace;
+	this.Attract = 0; 	
 
 	let encTxt = "";
 	if(this.Size == 'Small'){
@@ -85,6 +86,60 @@ class Enclosure{
 	appendEncDiv(){
 		let node = document.getElementById("enclosureDiv");
     	node.appendChild(this.encDiv);
+	}
+
+	calcAttract(){
+		this.Attract = 0;
+
+		// Create a list of objects with 1 entry per animal Name, and a count of the number of animals present
+		let aniCount = this.Animal.reduce(function(acc, curr) {
+		  let isElemExist = acc.findIndex(function(item) {
+		    return item.Name === curr.Name;
+		  })
+		  if (isElemExist === -1) {
+		    let obj = {};
+		    obj.Name = curr.Name;
+		    obj.Count = 1;
+		    acc.push(obj)
+		  } else {
+		    acc[isElemExist].Count += 1
+		  }
+		  return acc;
+		}, [])
+
+		// Iterate through the list of unique animals with count to calculate the total attractivity of the enclosure
+		for(let ani of aniCount){
+			let encAttract = 0;
+			let count = ani.Count;
+			let maxHerd = 0;
+
+			let name = ani.Name;
+			let attract = 0;
+			let herdM = 1;
+			for(let aniB of baseAnimalList){
+				if(aniB.Name == name){
+					attract = aniB.Attract;
+					maxHerd = aniB.MaxHerd;
+					if(count > 1){
+						herdM = aniB.HerdMulti;			
+					}
+				}
+			}
+			if(count > maxHerd){						// We apply a cap to the total count of animals in a given enclosure. Having more than the cap brings no benefits
+				count = maxHerd;
+			}
+			let multiValue = Math.pow(herdM, count);
+			encAttract = multiValue * count * attract;
+			this.Attract = this.Attract + encAttract;
+		}
+	}
+
+	updateSpace(){
+		this.CurrentSpace = 0;
+		for(let ani of this.Animal){
+			this.CurrentSpace = this.CurrentSpace + ani.Space;
+		}
+		document.getElementById('spanCurrent' + this.Id).innerHTML = this.CurrentSpace;
 	}	
 }
 
@@ -167,6 +222,12 @@ function initializeEnc() {
             Size: enc.Size,
             CurrentSpace: enc.CurrentSpace
         }))
+    }
+
+    for(let enc of enclosureList){
+        enc.calcAttract();
+        v.attracAni = v.attracAni + enc.Attract;
+        // enc.updateSpace();
     }
 }
 

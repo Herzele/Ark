@@ -10,44 +10,20 @@ html,body{
 .header {
   border: 1px solid black;
   padding: 15px;
-  margin-bottom: 1%;
-}
-
-.ressources {
-  display: flex;
-  width: 20%;
-  height: 80%;
-  float: left;
-  padding: 15px;
-  border: 1px solid black;
-}
-
-.interface {
-  width: 58%;
-  height: 80%;
-  float: left;
-  padding: 15px;
-  border: 1px solid black;
-  margin-left: 1%;
-  margin-right: 1%;
-  overflow-y: auto;
-}
-
-.logs {
-  width: 20%;
-  height: 80%;
-  float: left;
-  padding: 15px;
-  border: 1px solid black;
-}
-
-.bottomBar {
   height: 5%;
-  width: 99%;
-  position: fixed;
-  bottom: 1%;
-  left: 0.5%;
-  border: 1px solid black;
+}
+
+.titles{
+  height: 2%;
+  margin-top: 0.5%;
+  margin-bottom: 3px;
+  width: 100%;
+  display: flex;
+}
+
+#LogsTitle {
+    font-weight: bold;
+    display: inline-block;
 }
 
 
@@ -56,26 +32,115 @@ html,body{
   text-align: center;
 }
 
+/* -------------------- TABS -------------------- */
+
+/* Style the tab */
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+
+/* Style the buttons inside the tab */
+
+
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+  font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+}
+
+
+/*#staffTab{
+  display: none;
+}*/
+
+
+/* -------------------- GENERIC STYLING -------------------- */
+
+.stylelessButton {
+    font-size: 100%;
+    font-family: inherit;
+    border: 0;
+    padding: 0;
+    background: transparent; // Firefox
+}
+
+.stylelessButton button:hover, button:focus {
+  outline: none;
+}
 
 
 /* -------------------- HEADER -------------------- */
-.header{
-  position: relative;
-
-}
 
 #gameTitle{
-  font-size: 36px;
+  font-size: 20px;
 }
 
 #dateJour{
   float: right;
-  padding-top: 1%;
+  position: relative;
   font-size: 18px;
 }
 
+/* -------------------- BOTTOM -------------------- */
+
+
+.bottomBar {
+  height: 5%;
+  width: 99%;
+  position: fixed;
+  bottom: 1%;
+  left: 0.5%;
+  border: 1px solid black;
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+
+#btSave #btDelete{
+  display: flex;
+
+}
 
 /* -------------------- RESSOURCES -------------------- */
+
+
+.ressources {
+  display: flex;
+  width: 20%;
+  height: 85%;
+  float: left;
+  padding: 15px;
+  border: 1px solid black;
+}
+
+#RessourcesTitle{
+  width: 20%;
+}
 
 #ressStock{
   width: 30%;
@@ -102,10 +167,43 @@ html,body{
   text-align: right;
 }
 
+/* -------------------- INTERFACE -------------------- */
+
+.interface {
+  width: 58%;
+  height: 85%;
+  float: left;
+  padding: 15px;
+  border: 1px solid black;
+  margin-left: 1%;
+  margin-right: 1%;
+  overflow-y: auto;
+}
+
+#InterfaceTitle{
+  width: 60%;
+}
+
+
+/* -------------------- PARC -------------------- */
+
+.card-bt{
+  display: flex;
+  justify-content: space-between;
+  align-items: center; 
+}
+
+#graveyardCt{
+  color: #007bff;  
+}
+
+#createEncDiv{
+  margin-bottom: 10px;
+}
+
 /* -------------------- ENCLOSURES -------------------- */
 .enclosureDivClass{
   display: flex;
-  flex-wrap: wrap;
 }
 
 .enclosureSmall {
@@ -152,6 +250,8 @@ html,body{
   margin-right: 2px;
 }
 
+/* -------------------- ANIMALS -------------------- */
+
 /* -------------------- MARKET -------------------- */
 
 .marketDivCss{
@@ -173,58 +273,29 @@ html,body{
   text-align: center;
 }
 
-/* -------------------- ANIMALS -------------------- */
-#holdingPen{
-  border: 1px solid;
-}
-
-/* -------------------- TABS -------------------- */
-
-/* Style the tab */
-.tab {
-  overflow: hidden;
-  border: 1px solid #ccc;
-  background-color: #f1f1f1;
-}
-
-/* Style the buttons inside the tab */
-
-
-.tab button {
-  background-color: inherit;
-  float: left;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  padding: 14px 16px;
-  transition: 0.3s;
-  font-size: 17px;
-}
-
-/* Change background color of buttons on hover */
-.tab button:hover {
-  background-color: #ddd;
-}
-
-/* Create an active/current tablink class */
-.tab button.active {
-  background-color: #ccc;
-}
-
-/* Style the tab content */
-.tabcontent {
-  display: none;
-  padding: 6px 12px;
-  border: 1px solid #ccc;
-  border-top: none;
-}
-
-#graveyardTab{
-  display: none;
-}
-
 
 /* -------------------- LOGS -------------------- */
+
+.logs {
+  width: 20%;
+  height: 85%;
+  float: left;
+  padding: 15px;
+  border: 1px solid black;
+  overflow-y: auto; 
+}
+
+#LogsTitle{
+  width: 20%;
+}
+
+#clearLogs{
+  float: right;
+  margin-right: 2px;
+
+}
+
+
 .meTalking{
   font-size: 12;
   font-style: italic;
@@ -253,3 +324,53 @@ html,body{
   left: 50%;
   display: block;
 }*/
+
+
+/* -------------------- COLOR PALETTE REF -------------------- */
+
+
+/* CSS HEX */
+--pink-lavender: #d5b4d1ff;
+--bud-green: #69b261ff;
+--cafe-au-lait: #a27d58ff;
+--persian-plum: #641c22ff;
+--smoky-black: #090301ff;
+
+/* CSS HSL */
+--pink-lavender: hsla(307, 28%, 77%, 1);
+--bud-green: hsla(114, 34%, 54%, 1);
+--cafe-au-lait: hsla(30, 30%, 49%, 1);
+--persian-plum: hsla(355, 56%, 25%, 1);
+--smoky-black: hsla(15, 80%, 2%, 1);
+
+/* SCSS HEX */
+$pink-lavender: #d5b4d1ff;
+$bud-green: #69b261ff;
+$cafe-au-lait: #a27d58ff;
+$persian-plum: #641c22ff;
+$smoky-black: #090301ff;
+
+/* SCSS HSL */
+$pink-lavender: hsla(307, 28%, 77%, 1);
+$bud-green: hsla(114, 34%, 54%, 1);
+$cafe-au-lait: hsla(30, 30%, 49%, 1);
+$persian-plum: hsla(355, 56%, 25%, 1);
+$smoky-black: hsla(15, 80%, 2%, 1);
+
+/* SCSS RGB */
+$pink-lavender: rgba(213, 180, 209, 1);
+$bud-green: rgba(105, 178, 97, 1);
+$cafe-au-lait: rgba(162, 125, 88, 1);
+$persian-plum: rgba(100, 28, 34, 1);
+$smoky-black: rgba(9, 3, 1, 1);
+
+/* SCSS Gradient */
+$gradient-top: linear-gradient(0deg, #d5b4d1ff, #69b261ff, #a27d58ff, #641c22ff, #090301ff);
+$gradient-right: linear-gradient(90deg, #d5b4d1ff, #69b261ff, #a27d58ff, #641c22ff, #090301ff);
+$gradient-bottom: linear-gradient(180deg, #d5b4d1ff, #69b261ff, #a27d58ff, #641c22ff, #090301ff);
+$gradient-left: linear-gradient(270deg, #d5b4d1ff, #69b261ff, #a27d58ff, #641c22ff, #090301ff);
+$gradient-top-right: linear-gradient(45deg, #d5b4d1ff, #69b261ff, #a27d58ff, #641c22ff, #090301ff);
+$gradient-bottom-right: linear-gradient(135deg, #d5b4d1ff, #69b261ff, #a27d58ff, #641c22ff, #090301ff);
+$gradient-top-left: linear-gradient(225deg, #d5b4d1ff, #69b261ff, #a27d58ff, #641c22ff, #090301ff);
+$gradient-bottom-left: linear-gradient(315deg, #d5b4d1ff, #69b261ff, #a27d58ff, #641c22ff, #090301ff);
+$gradient-radial: radial-gradient(#d5b4d1ff, #69b261ff, #a27d58ff, #641c22ff, #090301ff);

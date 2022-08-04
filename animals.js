@@ -6,6 +6,8 @@ class Animals{
 	this.Food = params.Food;
 	this.Size = params.Size;
 	this.Attract = params.Attract;
+	this.HerdMulti = params.HerdMulti;
+	this.MaxHerd = params.MaxHerd;
 	this.Cost = this.Attract * 1000;
 	this.CostType = params.CostType;
 	this.Place = params.Place;
@@ -16,9 +18,13 @@ class Animals{
 	this.Space = params.Space;
 	this.MaxAge = params.MaxAge;
 	this.BirthDay = params.BirthDay;
-
-	baseAnimalList.push(this);
-
+	
+	let HerdMulti = this.HerdMulti;
+	let Name = this.Name;
+		if(HerdMulti != undefined){
+			herdMultiplier.push({Name, HerdMulti});
+			baseAnimalList.push(this);
+		}
 	}
 
 	getInstance(){
@@ -52,7 +58,6 @@ class Animals{
 			aniSpan.innerHTML = currentAge;											
 			if(v.isVisibleGraveyard == false){										// Change the variable to show the Graveyard tab from now on
 				v.isVisibleGraveyard = true;
-				document.getElementById('graveyardTab').style.display = 'inline';
 			}
 		}
 		if(aniSpan != undefined){
@@ -84,35 +89,47 @@ class Animals{
 
 	moveAnimal(newPlace, newPlaceId, noRem){
 
-		let oldPlace = this.Place;				// Store the place before the changes
-		if(oldPlace == 'enclosure'){
+		let oldPlace = this.Place;												// Store the place before the changes
+		if(oldPlace == 'enclosure' && noRem != true){							// When the animal go from Enclosure -> Holding Pen
 			let currentEnc = enclosureList[this.PlaceId];
-			currentEnc.CurrentSpace = currentEnc.CurrentSpace - this.Space;
+			currentEnc.CurrentSpace = currentEnc.CurrentSpace - this.Space;		// Update the occupied space value of the enclosure by removing the animal
 
 			let span = 'spanCurrent' + this.PlaceId;
 			document.getElementById(span).innerHTML = currentEnc.CurrentSpace;
+			let aniToRem = undefined;
+			for(let i = 0; i < currentEnc.Animal.length; i++){
+				if(currentEnc.Animal[i].Id == this.Id){
+					currentEnc.Animal.splice(i, 1);								// Remove the animal from the enclosure list
+					i--;
+				}
+			}
+			currentEnc.calcAttract();
 		}
 
 		this.Place = newPlace;
 
-		if(newPlaceId != undefined){			// The newPlaceId is defined solely for the enclosures, so if it's defined, we use it to create the div
-			newPlace = newPlace + newPlaceId;
+		if(newPlaceId != undefined && newPlace == 'enclosure'){			// The newPlaceId is defined solely for the enclosures, so if it's defined, we use it to create the div
 			this.PlaceId = newPlaceId;	
 		}
 
+		if(noRem != true){
+			let divToRemove = document.getElementById("Div" + this.Id);		
+			divToRemove.remove();
+		} 									
+
+		this.generateDiv();
+		repopulateDropdownList();
+	}
+
+	generateDiv(){
+		let placeDiv = this.Place;
 		let costTxt ='';														// Initialize conditionnal string
-		if(newPlace == 'Market'){												
+		if(this.Place == 'Market'){												
 			costTxt = '<br>Cost : ' + this.Cost + ' ' + this.CostType;							
 		} else {
 			costTxt = "<br>Age : <span id='aniAge" + this.Id + "'</span>";
 		}
-		if(noRem == true){
 
-		} else {															// If the noRem is not true, we remove the existing Div
-			let divToRemove = document.getElementById("Div" + this.Id);		
-			divToRemove.remove();
-		}										
- 
 		let newDiv = document.createElement("div");
 		newDiv.id = "Div" + this.Id;						
 		newDiv.classList.add('marketDivCss');	
@@ -125,7 +142,7 @@ class Animals{
 
 		newDiv.appendChild(newSpan);
 
-		if (newPlace == 'Market'){
+		if (this.Place == 'Market'){
 			let id = this.Id;
 			let btBuyAni = document.createElement("button");
 			btBuyAni.id = "Bt" + this.Id;
@@ -135,19 +152,22 @@ class Animals{
 			newDiv.appendChild(btBuyAni);
 		}
 
-		if (newPlace == 'enclosure' + newPlaceId){
+		if (this.Place == 'enclosure' && this.PlaceId != undefined){
 			let id = this.Id;
 			let btRemove = document.createElement("button");
 			btRemove.id = "Bt" + this.Id;
 			btRemove.classList.add('btBuyAni');
 			btRemove.textContent = "Remove";
 			btRemove.addEventListener("click", function () {moveAnimalWrapper(id, 'holdingPen');});
-			newDiv.appendChild(btRemove);	
+			newDiv.appendChild(btRemove);
+			enclosureList[this.PlaceId].Animal.push(this);
+			enclosureList[this.PlaceId].calcAttract();
+			placeDiv = this.Place + this.PlaceId;
 		}
 
-		let node = document.getElementById(newPlace);
+		let node = document.getElementById(placeDiv);
 		node.appendChild(newDiv);
-		repopulateDropdownList();
+
 	}
 }
 
@@ -155,9 +175,13 @@ class Animals{
 function renewMarket(){
 	if(v.reputation >= v.renewMrktCost){
 		v.reputation = v.reputation - v.renewMrktCost;
-		generateMarketList();
-		for (let ani of availableList){
-			moveAnimalWrapper(ani.Id, ani.Place, ani.PlaceId, false);
+		let aniAdded = generateMarketList();
+		for(let i = availableList.length - 1; i <= aniAdded; i--){	// We reverse loop the list to move only the newly created animals
+			let aniId = availableList[i].Id;
+			let aniPlace = availableList[i].Place;
+			let aniPlaceId = availableList[i].PlaceId;
+			moveAnimalWrapper(aniId, aniPlace, aniPlaceId, false);
+
 		}	
 	} else {
 		updateLogs("Not enough reputation")
@@ -209,6 +233,7 @@ function generateMarketList(){
 			moveAnimalWrapper(currentAnimal.Id, currentAnimal.Place, null, true);
 		}
 	}
+	return aniToAdd;
 };
 
 function updateAgesWrapper(){
@@ -248,19 +273,21 @@ var eligibleList = [];		// List of all animals eligible for the market, dependin
 var baseAnimalList = [];	// List of all animals from the initial pool, 1 animal of each type only
 var availableList = [];		// List of all animals bought or buyable. Used mainly to attribute unique ID
 var holdingPenList = [];	// List of all animals currently in the holding pen
-
+var herdMultiplier = [];	// Dictionnary of herd muliplier by animal
 
 /* ------ ANIMALS ------*/
 
-// /* TEST TIER*/
-// const Dwarf = new Animals({
-// 	Name: "Dwarf",
-// 	Food: "Herbivora",
-// 	Size: "Small",
-// 	Tiers: 1,
-// 	Space: 1,
-// 	MaxAge: 3,	
-// 	Attract: 1});
+/* TEST TIER*/
+const Dwarf = new Animals({
+	Name: "Dwarf",
+	Food: "Herbivora",
+	Size: "Small",
+	Tiers: 1,
+	Space: 1,
+	MaxAge: 3000,	
+	Attract: 1,
+	HerdMulti: 1,
+	MaxHerd: 5});
 
 /* TIER 1*/
 
@@ -271,7 +298,9 @@ const sheep = new Animals({
 	Tiers: 1,
 	Space: 2,
 	MaxAge: 12,	
-	Attract: 1});
+	Attract: 1,
+	HerdMulti: 1,
+	MaxHerd: 5});
 
 const horse = new Animals({
 	Name: "Horse",
@@ -280,7 +309,9 @@ const horse = new Animals({
 	Tiers: 1,
 	Space: 2,	
 	MaxAge: 27,		
-	Attract: 1});
+	Attract: 1,
+	HerdMulti: 1,
+	MaxHerd: 2});
 
 const cow = new Animals({
 	Name: "Cow",
@@ -289,7 +320,9 @@ const cow = new Animals({
 	Tiers: 1,
 	Space: 2,	
 	MaxAge: 20,		
-	Attract: 1});
+	Attract: 1,
+	HerdMulti: 1,
+	MaxHerd: 2});
 
 const Rabbit = new Animals({
 	Name: "Rabbit",
@@ -298,7 +331,9 @@ const Rabbit = new Animals({
 	Tiers: 1,
 	Space: 1,
 	MaxAge: 9,		
-	Attract: 1});
+	Attract: 1,
+	HerdMulti: 1.02,
+	MaxHerd: 2});
 
 const Chicken = new Animals({
 	Name: "Chicken",
@@ -307,7 +342,9 @@ const Chicken = new Animals({
 	Tiers: 1,
 	Space: 1,
 	MaxAge: 7,			
-	Attract: 1});
+	Attract: 1,
+	HerdMulti: 1.02,
+	MaxHerd: 2});
 
 const Duck = new Animals({
 	Name: "Duck",
@@ -316,7 +353,9 @@ const Duck = new Animals({
 	Tiers: 1,
 	Space: 1,		
 	MaxAge: 10,	
-	Attract: 1});
+	Attract: 1,
+	HerdMulti: 1.05,
+	MaxHerd: 5});
 
 const Pig = new Animals({
 	Name: "Pig",
@@ -325,7 +364,9 @@ const Pig = new Animals({
 	Tiers: 1,
 	Space: 2,	
 	MaxAge: 17,		
-	Attract: 1});
+	Attract: 1,
+	HerdMulti: 1,
+	MaxHerd: 2});
 
 /* TIER 2*/
 
@@ -336,7 +377,11 @@ const fox = new Animals({
 	Tiers: 2,
 	Space: 1,		
 	MaxAge: 12,	
-	Attract: 3});
+	Attract: 3,
+	HerdMulti: 1,
+	MaxHerd: 2,
+	HerdMulti: 1,
+	MaxHerd: 2});
 
 const deer = new Animals({
 	Name: "Deer",
@@ -344,8 +389,10 @@ const deer = new Animals({
 	Size: "Medium",
 	Tiers: 2,
 	Space: 2,	
-	MaxAge: 6,		
-	Attract: 2});
+	MaxAge: 6,
+	Attract: 2,
+	HerdMulti: 1.05,
+	MaxHerd: 5});
 
 /* TIER 3*/
 
@@ -356,7 +403,9 @@ const wolf = new Animals({
 	Tiers: 3,
 	Space: 2,		
 	MaxAge: 13,	
-	Attract: 4});
+	Attract: 4,
+	HerdMulti: 1.1,
+	MaxHerd: 5});
 
 /* TIER 4*/
 
@@ -367,4 +416,6 @@ const blackBear = new Animals({
 	Tiers: 4,
 	Space: 3,	
 	MaxAge: 30,		
-	Attract: 6});
+	Attract: 6,
+	HerdMulti: 1.2,
+	MaxHerd: 3});
