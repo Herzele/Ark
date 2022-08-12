@@ -49,6 +49,13 @@ const tipVisitDef = tippy('#visitorsDiv', {
   allowHTML: true,
 });
 
+// Staff
+const tipCaretaker = tippy('#caretaker', {
+  content: 'Take care of animals and research new technologies related to animals.',
+  placement: 'bottom',
+  allowHTML: true,
+});
+
 /* -----Detail----- */
 
 const tipAttra = tippy('#attractivity', {
@@ -81,7 +88,7 @@ const tipReput = tippy('#reputPerSec', {
 /* -----Description----- */
 const renewMrkt = tippy('#renewBt', {
   content: '-+-',
-  placement: 'right',
+  placement: 'bottom',
   allowHTML: true,
 });
 

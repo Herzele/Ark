@@ -18,11 +18,14 @@ class Animals{
 	this.Space = params.Space;
 	this.MaxAge = params.MaxAge;
 	this.BirthDay = params.BirthDay;
+	this.Health = 100;
+	this.HealtLossChance = params.HealtLossChance; // Expressed in %
+	this.Alive = false;
 	
 	let HerdMulti = this.HerdMulti;
 	let Name = this.Name;
 		if(HerdMulti != undefined){
-			herdMultiplier.push({Name, HerdMulti});
+			herdMultiplier.push({Name, HerdMulti});		// A dictionnary of herd multiplier is maintained for calc reasons
 			baseAnimalList.push(this);
 		}
 	}
@@ -35,16 +38,21 @@ class Animals{
 		} else {
 			costType = 'reputation';
 		}
+		this.CostType = costType;
+
 		return baseIdentifier = new Animals({
 			Name: this.Name,
 			Food: this.Food,
 			Size: this.Size,
 			Attract: this.Attract,
-			CostType: costType,
+			CostType: this.CostType,
 			Tiers: this.Tiers,
 			Space: this.Space,
 			MaxAge: this.MaxAge,
-			EncId: this.EncId});
+			EncId: this.EncId,
+			Health: this.Health,
+			HealtLossChance: this.HealtLossChance,
+			Alive: true});
 	}
 
 	updateAge(){
@@ -52,16 +60,21 @@ class Animals{
 		let aniSpan = document.getElementById(spanId);
 		let currentAge = Math.ceil((v.daysElapsed - this.BirthDay) / 365);
 		if(currentAge > this.MaxAge){												// Code to manage the death of animals
-			this.moveAnimal('Graveyard');											
-			updateLogs('Your ' + this.Name + ' is dead.')
-			let aniSpan = document.getElementById(spanId);							// Update the age of death for the graveyard 
-			aniSpan.innerHTML = currentAge;											
-			if(v.isVisibleGraveyard == false){										// Change the variable to show the Graveyard tab from now on
-				v.isVisibleGraveyard = true;
-			}
+			this.killAnimal('old age.');
 		}
 		if(aniSpan != undefined){
 			aniSpan.innerHTML = currentAge;
+		}
+	}
+
+	killAnimal(why){
+		this.moveAnimal('graveyard');	
+		this.Alive = false;										
+		updateLogs('Your ' + this.Name + ' died of ' + why);
+		let aniSpan = document.getElementById(spanId);							// Update the age of death for the graveyard 
+		aniSpan.innerHTML = currentAge;											
+		if(v.isVisiblegraveyard == false){										// Change the variable to show the graveyard tab from now on
+			v.isVisiblegraveyard = true;
 		}
 	}
 
@@ -85,8 +98,21 @@ class Animals{
 				updateLogs("Not enough money");
 			}
 		}
+		this.Alive = true;
 	}
 
+	calcHealth(){
+		let roll = rollChances();
+		if(roll <= this.HealtLossChance){
+			this.Health = this.Health -1;
+			let spanId = "aniHealth" + this.Id;
+			document.getElementById(spanId).innerHTML = this.Health;
+		}
+		if(this.Health <= 0){
+			this.killAnimal('bad health.');
+		}
+	}
+	
 	moveAnimal(newPlace, newPlaceId, noRem){
 
 		let oldPlace = this.Place;												// Store the place before the changes
@@ -104,6 +130,7 @@ class Animals{
 				}
 			}
 			currentEnc.calcAttract();
+
 		}
 
 		this.Place = newPlace;
@@ -115,7 +142,37 @@ class Animals{
 		if(noRem != true){
 			let divToRemove = document.getElementById("Div" + this.Id);		
 			divToRemove.remove();
-		} 									
+		}
+
+		// This block manage the counts display for each animal place
+
+		let oldPlaceCt = oldPlace + 'Ct';
+		let newPlaceCt = newPlace + 'Ct';
+		switch(oldPlace){
+			case 'holdingPen':
+				v.holdingPenCt --;
+				document.getElementById(oldPlaceCt).innerHTML = v.holdingPenCt;
+				break;
+			case 'market':
+				v.marketCt --;
+				document.getElementById(oldPlaceCt).innerHTML = v.marketCt;				
+				break;	
+		}			
+
+		switch(newPlace){
+			case 'holdingPen':
+				v.holdingPenCt ++;
+				document.getElementById(newPlaceCt).innerHTML = v.holdingPenCt;
+				break;
+			case 'market':
+				v.marketCt ++;
+				document.getElementById(newPlaceCt).innerHTML = v.marketCt;
+				break;
+			case 'graveyard':
+				v.graveyardCt ++;
+				document.getElementById(newPlaceCt).innerHTML = v.graveyardCt;
+				break;
+		}		
 
 		this.generateDiv();
 		repopulateDropdownList();
@@ -124,7 +181,7 @@ class Animals{
 	generateDiv(){
 		let placeDiv = this.Place;
 		let costTxt ='';														// Initialize conditionnal string
-		if(this.Place == 'Market'){												
+		if(this.Place == 'market'){												
 			costTxt = '<br>Cost : ' + this.Cost + ' ' + this.CostType;							
 		} else {
 			costTxt = "<br>Age : <span id='aniAge" + this.Id + "'</span>";
@@ -135,14 +192,14 @@ class Animals{
 		newDiv.classList.add('marketDivCss');	
 
 		let newSpan = document.createElement("span");
-		let str = this.Name + '<br>' + 'Size : ' + this.Size +
-			'<br>Attractivity : ' + this.Attract +
+		let str = "<span class='aniName'>" + this.Name + "</span> <br>" +
+			'Attractivity : ' + this.Attract +
+			"<br>Health : <span id='aniHealth" + this.Id + "'>" + this.Health + " </span>" +
 			costTxt;
 		newSpan.insertAdjacentHTML( 'beforeend', str );
-
 		newDiv.appendChild(newSpan);
 
-		if (this.Place == 'Market'){
+		if (this.Place == 'market'){
 			let id = this.Id;
 			let btBuyAni = document.createElement("button");
 			btBuyAni.id = "Bt" + this.Id;
@@ -167,8 +224,7 @@ class Animals{
 
 		let node = document.getElementById(placeDiv);
 		node.appendChild(newDiv);
-
-	}
+		}
 }
 
 
@@ -202,7 +258,6 @@ function buyAnimalWrapper(id){
 			ani.buyAnimal();
 		}
 	}
-	v.marketCurrentCount = v.marketCurrentCount - 1;
 }
 
 function updateTiers(){
@@ -216,20 +271,18 @@ function updateTiers(){
 function generateMarketList(){
 
 	// Select random animals to add to the market list
-	let aniToAdd = v.marketMaxCapacity - v.marketCurrentCount;
+	let aniToAdd = v.marketMaxCapacity - v.marketCt;
 
-	if (aniToAdd > 0){		
-														// If there are empty slots in the market
+	if (aniToAdd > 0){																				// If there are empty slots in the market												
 		for(i = 0; i < aniToAdd; i++){
-
 			let randomElement = Math.floor(Math.random() * eligibleList.length); 					// Select a random number in the base animal list
 			let currentAnimal = eligibleList[randomElement].getInstance();							// Initialise the random animal
 			availableList.push(currentAnimal);														// Add the animal to the list of available animal
 
 			currentAnimal.Id = availableList.length -1;												// Initialise the Id to be the same as the animal's index in the list
-			currentAnimal.Place = 'Market';															// Change the place to market
+			currentAnimal.Place = 'market';															// Change the place to market
 
-			v.marketCurrentCount = v.marketCurrentCount + 1;										// Add 1 to the number of animals in the market
+			v.marketCt = v.marketCt + 1;															// Add 1 to the number of animals in the market
 			moveAnimalWrapper(currentAnimal.Id, currentAnimal.Place, null, true);
 		}
 	}
@@ -238,8 +291,16 @@ function generateMarketList(){
 
 function updateAgesWrapper(){
 	for(let ani of availableList){
-		if(ani.Place != 'Graveyard'){
+		if(ani.Place != 'graveyard'){
 			ani.updateAge();
+		}
+	}
+}
+
+function updateHealth(){
+	for(let ani of availableList){
+		if(ani.Alive){
+			ani.calcHealth();
 		}
 	}
 }
@@ -249,6 +310,7 @@ function initializeAni() {
     for (let ani of loadedAniList) {
 	    availableList.push(new Animals({
 	        Attract: ani.Attract,
+	        CostType: ani.CostType,
 			Cost: ani.Cost,
 			Food: ani.Food,
 			Id: ani.Id,
@@ -259,7 +321,10 @@ function initializeAni() {
 			Tiers: ani.Tiers,
 			Space: ani.Space,
 			MaxAge: ani.MaxAge,
-			BirthDay: ani.BirthDay
+			BirthDay: ani.BirthDay,
+			Health: ani.Health,
+			HealtLossChance: ani.HealtLossChance,
+			Alive: ani.Alive
 		    }))
 	}
 	for (let ani of availableList){
@@ -287,7 +352,8 @@ const Dwarf = new Animals({
 	MaxAge: 3000,	
 	Attract: 1,
 	HerdMulti: 1,
-	MaxHerd: 5});
+	MaxHerd: 5,
+	HealtLossChance: 0});
 
 /* TIER 1*/
 
@@ -300,7 +366,8 @@ const sheep = new Animals({
 	MaxAge: 12,	
 	Attract: 1,
 	HerdMulti: 1,
-	MaxHerd: 5});
+	MaxHerd: 5,
+	HealtLossChance: 1});
 
 const horse = new Animals({
 	Name: "Horse",
@@ -311,7 +378,8 @@ const horse = new Animals({
 	MaxAge: 27,		
 	Attract: 1,
 	HerdMulti: 1,
-	MaxHerd: 2});
+	MaxHerd: 2,
+	HealtLossChance: 1});
 
 const cow = new Animals({
 	Name: "Cow",
@@ -322,7 +390,8 @@ const cow = new Animals({
 	MaxAge: 20,		
 	Attract: 1,
 	HerdMulti: 1,
-	MaxHerd: 2});
+	MaxHerd: 2,
+	HealtLossChance: 1});
 
 const Rabbit = new Animals({
 	Name: "Rabbit",
@@ -333,7 +402,8 @@ const Rabbit = new Animals({
 	MaxAge: 9,		
 	Attract: 1,
 	HerdMulti: 1.02,
-	MaxHerd: 2});
+	MaxHerd: 2,
+	HealtLossChance: 1});
 
 const Chicken = new Animals({
 	Name: "Chicken",
@@ -344,7 +414,8 @@ const Chicken = new Animals({
 	MaxAge: 7,			
 	Attract: 1,
 	HerdMulti: 1.02,
-	MaxHerd: 2});
+	MaxHerd: 2,
+	HealtLossChance: 1});
 
 const Duck = new Animals({
 	Name: "Duck",
@@ -355,7 +426,8 @@ const Duck = new Animals({
 	MaxAge: 10,	
 	Attract: 1,
 	HerdMulti: 1.05,
-	MaxHerd: 5});
+	MaxHerd: 5,
+	HealtLossChance: 1});
 
 const Pig = new Animals({
 	Name: "Pig",
@@ -366,7 +438,8 @@ const Pig = new Animals({
 	MaxAge: 17,		
 	Attract: 1,
 	HerdMulti: 1,
-	MaxHerd: 2});
+	MaxHerd: 2,
+	HealtLossChance: 1});
 
 /* TIER 2*/
 
@@ -381,7 +454,8 @@ const fox = new Animals({
 	HerdMulti: 1,
 	MaxHerd: 2,
 	HerdMulti: 1,
-	MaxHerd: 2});
+	MaxHerd: 2,
+	HealtLossChance: 1});
 
 const deer = new Animals({
 	Name: "Deer",
@@ -392,7 +466,8 @@ const deer = new Animals({
 	MaxAge: 6,
 	Attract: 2,
 	HerdMulti: 1.05,
-	MaxHerd: 5});
+	MaxHerd: 5,
+	HealtLossChance: 1});
 
 /* TIER 3*/
 
